@@ -1,0 +1,128 @@
+﻿/* This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *
+ *
+ */
+
+body {
+  font-family: "Abel", "arial", sans-serif;
+}
+
+h1, h2, h3, h4, h5, .logo {
+  font-family: "Aldrich", "arial", sans-serif;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+body {
+  color: #f3f3f8;
+  background-color: #0c0c0d;
+}
+
+.header-blanket {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background-color: #0c0c0d;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#262626), to(#0c0c0d));
+  background: -moz-linear-gradient(top, #262626 0%, #0c0c0d 100%);
+  height: 150px;
+  z-index: -1;
+}
+
+a {
+  color: #78a633;
+}
+
+a:visited {
+  color: #40581b;
+}
+
+a:hover {
+  color: #5c7f27;
+}
+
+.header-wrapper {
+  background-image: url("/Content/Images/real_cf.png");
+  background-color: black;
+  border-bottom: 2px solid #8b8c8c;
+}
+
+header, .header-wrapper {
+  height: 4em;
+  padding-top: 1em;
+  color: #f3f3f8;
+}
+
+footer {
+  color: #8b8c8c;
+}
+
+footer .two-way {
+  border-left: 2px solid #262626;
+  border-right: 2px solid #262626;
+  border-radius: 1em;
+  box-shadow-left: 0 0 1em #262626;
+  box-shadow-right: 0 0 1em #262626;
+}
+
+footer h2 {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.logo {
+  color: #f3f3f8 !important;
+  font-size: 2em;
+  height: 3em;
+  text-decoration: none;
+  text-shadow: 1px 1px 0 #f3f3f8, 2px 2px 0 #f3f3f8, 3px 3px 0 #8b8c8c, 4px 4px 0 #8b8c8c, 5px 5px 0 #8b8c8c, 6px 6px 0 #8b8c8c;
+}
+
+/* Steam button */
+@-webkit-keyframes logo-glow {
+  from {
+    box-shadow: 0 0 50px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
+  }
+  to {
+    box-shadow: 0 0 20px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
+  }
+}
+
+@-webkit-keyframes logo-glow-big {
+  from {
+    box-shadow: 0 0 80px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
+  }
+  to {
+    box-shadow: 0 0 30px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
+  }
+}
+
+.steam-login-button {
+  -webkit-animation: logo-glow 1s ease-in-out infinite alternate;
+  background-image: url("/Content/Images/sits_large_border.png");
+  border-radius: 7px;
+  box-shadow: 0 0 100px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
+  cursor: pointer;
+  height: 51px;
+  margin: 50px auto;
+  width: 118px;
+}
+
+.unseen {
+  position: absolute;
+  top: -9999em;
+}
+
+.clear {
+  clear: both;
+}
