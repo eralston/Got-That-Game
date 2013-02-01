@@ -7,6 +7,9 @@ using System.Web;
 using System.Web.Mvc;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+using GotThatGame.Models;
 
 namespace GotThatGame.Controllers
 {
@@ -25,9 +28,9 @@ namespace GotThatGame.Controllers
     //    // http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=CF9A7722D2B3BF4AAE1437C6D5FED194&steamid=76561197981883201&relationship=friend
     //}
 
-    //// returns an array of games for the given steam id
+    //// returns an array of games for the given steam di
     //function getGames(steamid) {
-    //    // http://steamcommunity.com/id/eralston/games?tab=all&xml=1
+    //    //h ttp://steamcommunity.com/id/eralston/games?tab=all&xml=1
     //}
 
     //window.Steam = {
@@ -46,53 +49,7 @@ namespace GotThatGame.Controllers
 
     public class SteamController : Controller
     {
-        private const string ApiKey = "CF9A7722D2B3BF4AAE1437C6D5FED194";
-
-        /// <summary>
-        /// Returns the data stream for a GET on the given URL
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        private string GetResponseData(string url)
-        {
-            WebRequest request = WebRequest.Create(url);
-            WebResponse response = request.GetResponse();
-            using (Stream stream = response.GetResponseStream())
-            {
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Parses the given json string to find a single property value corresponding to the given property name
-        /// </summary>
-        /// <param name="json"></param>
-        /// <param name="propertyName"></param>
-        /// <returns></returns>
-        private string GetPropertyValue(string json, string propertyName)
-        {
-            using (StringReader sReader = new StringReader(json))
-            {
-                using (JsonTextReader reader = new JsonTextReader(sReader))
-                {
-                    while (reader.Read())
-                    {
-                        // find the "steamid" node
-                        if (reader.Value != null && reader.Value.ToString() == propertyName)
-                        {
-                            // hand back the next value
-                            reader.Read();
-                            return reader.Value.ToString();
-                        }
-                    }
-                }
-            }
-
-            throw new Exception(string.Format("Could not find property '{0}'", propertyName));
-        }
+        
 
         /// <summary>
         /// Retrieves the steam ID (convoluted number) for the given friendly name
@@ -100,29 +57,23 @@ namespace GotThatGame.Controllers
         /// <param name="id">friendly Steam name (EG, eralston)</param>
         /// <returns></returns>
         [HttpGet]
-        public string SteamId(string id)
+        public string SteamIdByFriendlyName(string id)
         {
-            string url = string.Format("http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key={0}&vanityurl={1}", ApiKey, id);
-            string json = GetResponseData(url);
-            return GetPropertyValue(json, "steamid");
+            return Player.GetSteamIdByFriendlyName(id);
         }
 
         [HttpGet]
-        public JsonResult UserProfile(string steamId)
+        public JsonResult UserProfileByFriendlyName(string id)
         {
-            return Json("", JsonRequestBehavior.AllowGet);
+            var profile = Player.GetPlayerByFriendlyName(id);
+            return Json(profile, JsonRequestBehavior.AllowGet); 
         }
 
         [HttpGet]
-        public JsonResult UserFriends(string steamId)
+        private JsonResult UserProfileBySteamId(string id)
         {
-            return Json("", JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpGet]
-        public JsonResult UserGames(string steamId)
-        {
-            return Json("", JsonRequestBehavior.AllowGet);
+            var profile = Player.GetPlayerBySteamId(id);
+            return Json(profile, JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿
 function load() {
-    $.get("Steam/SteamId/eralston", function (data, status, xhr) {
+    $.get("Steam/UserProfileByFriendlyName/eralston", function (data, status, xhr) {
             
     });
 }
