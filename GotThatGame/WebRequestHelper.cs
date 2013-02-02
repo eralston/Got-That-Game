@@ -20,14 +20,22 @@ namespace GotThatGame
         /// <returns></returns>
         public static string GetResponseData(string url)
         {
-            WebRequest request = WebRequest.Create(url);
-            WebResponse response = request.GetResponse();
-            using (Stream stream = response.GetResponseStream())
+            try
             {
-                using (StreamReader reader = new StreamReader(stream))
+                WebRequest request = WebRequest.Create(url);
+                WebResponse response = request.GetResponse();
+                using (Stream stream = response.GetResponseStream())
                 {
-                    return reader.ReadToEnd();
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        return reader.ReadToEnd();
+                    }
                 }
+            }
+            catch
+            {
+
+                return null;
             }
         }
     }

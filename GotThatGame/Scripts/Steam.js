@@ -1,8 +1,17 @@
 ﻿
+function loadCurrentPlayerSuccess() {
+    
+
+}
+
+function loadCurrentPlayer() {
+    var username = $("#username").val();
+    $.get("/Steam/CurrentUserPlayer/" + username, loadCurrentPlayerSuccess);
+}
+
+
 function load() {
-    $.get("Steam/UserProfileByFriendlyName/eralston", function (data, status, xhr) {
-            
-    });
+    $("#connect").click(loadCurrentPlayer);
 }
 
 $(load);

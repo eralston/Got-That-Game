@@ -1,7 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+
 using GotThatGame.Controllers;
 
 namespace GotThatGame.Test
@@ -10,15 +15,23 @@ namespace GotThatGame.Test
     public class SteamControllerTest
     {
         [TestMethod]
-        public void SteamIdTest()
+        public void CurrentPlayerTest()
         {
-        	// Arrange
-        	var controller = new SteamController();
-        
-        	// Act
-        
-        	// Assert
-        	Assert.Inconclusive(); // Todo: Make assertions, then remove this line
+            SteamController controller = new SteamController();
+
+            JsonResult result = controller.CurrentUserPlayer("eralston");
+
+            Assert.IsNotNull(result.Data);
+        }
+
+        [TestMethod]
+        public void GamesTest()
+        {
+            SteamController controller = new SteamController();
+
+            JsonResult result = controller.GamesByFriendlyName("eralston");
+
+            Assert.IsNotNull(result.Data);
         }
     }
 }

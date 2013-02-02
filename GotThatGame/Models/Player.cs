@@ -11,6 +11,40 @@ using GotThatGame.Controllers;
 
 namespace GotThatGame.Models
 {
+    //var api_key = "CF9A7722D2B3BF4AAE1437C6D5FED194";
+
+    //function getSteamId(friendlyName) {
+    //    // http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=CF9A7722D2B3BF4AAE1437C6D5FED194&vanityurl=eralston
+    //}
+
+    //function getProfile(steamId) {
+    //    // http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=CF9A7722D2B3BF4AAE1437C6D5FED194&steamids=76561197981883201
+    //}
+
+    //// returns a list of steam IDs
+    //function getFriends(steamId) {
+    //    // http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=CF9A7722D2B3BF4AAE1437C6D5FED194&steamid=76561197981883201&relationship=friend
+    //}
+
+    //// returns an array of games for the given steam di
+    //function getGames(steamid) {
+    //    //h ttp://steamcommunity.com/id/eralston/games?tab=all&xml=1
+    //}
+
+    //window.Steam = {
+    //    apiKey : "CF9A7722D2B3BF4AAE1437C6D5FED194",
+
+    //    getSteamId: function(friendlyName, success, failure) {
+    //        $.getJSON("http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=" + this.apiKey + "&vanityurl=" + friendlyName, function(ret){
+    //            success(ret.response.steamid);
+    //        }).error(failure);
+    //    },
+
+    //    getPlayer : function (friendlyName) {
+
+    //    }
+    //};
+
     /// <summary>
     /// A serializable class for pulling a player's profile, friends, and games
     /// </summary>
@@ -36,10 +70,10 @@ namespace GotThatGame.Models
         /// </summary>
         /// <param name="friendlyName"></param>
         /// <returns></returns>
-        public static Player GetPlayerByFriendlyName(string friendlyName)
+        public static Player GetPlayerByFriendlyName(string friendlyName, bool loadFriends = false)
         {
             string steamId = GetSteamIdByFriendlyName(friendlyName);
-            return GetPlayerBySteamId(steamId);
+            return GetPlayerBySteamId(steamId, loadFriends);
         }
 
         /// <summary>
@@ -47,13 +81,42 @@ namespace GotThatGame.Models
         /// </summary>
         /// <param name="friendlyName"></param>
         /// <returns></returns>
-        public static Player GetPlayerBySteamId(string id)
+        public static Player GetPlayerBySteamId(string id, bool loadFriends = false)
         {
             string url = string.Format("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={0}&steamids={1}", ApiHelper.ApiKey, id);
             string json = WebRequestHelper.GetResponseData(url);
             JArray players = JObject.Parse(json)["response"]["players"] as JArray;
             JObject player = players[0] as JObject;
-            return player.ToObject<Player>();
+            Player ret =  player.ToObject<Player>();
+            return ret;
+        }
+
+        /// <summary>
+        /// Makes a web service call to get the SteamIds
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<string> GetFriendSteamIds(string steamId)
+        {
+            string url = string.Format("http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key={0}&steamid={1}&relationship=friend", ApiHelper.ApiKey, steamId);
+            string json = WebRequestHelper.GetResponseData(url);
+            return JsonHelper.GetAllValuesForProperty(json, "steamid");
+        }
+
+        /// <summary>
+        /// Gets a list of player objects for this player's friends
+        /// NOTE: The friends list for these players is NOT loaded
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        public static IEnumerable<Player> GetFriendsOfPlayer(Player player)
+        {
+            List<Player> ret = new List<Player>();
+            IEnumerable<string> friendSteamIds = GetFriendSteamIds(player.SteamId);
+            foreach (string friendSteamId in friendSteamIds)
+            {
+                ret.Add(GetPlayerBySteamId(friendSteamId, false));
+            }
+            return ret;
         }
 
         #endregion
@@ -92,8 +155,8 @@ namespace GotThatGame.Models
                 if (string.IsNullOrEmpty(_friendlyName))
                 {
                     // take the profile URL and chop out the vanity URL, which is the friendly name
-                    _friendlyName = ProfileUrl.Replace("http://steamcommunity.com/id/eralston/", "");
-                    _friendlyName = _friendlyName.Substring(0, _friendlyName.Length - 2);
+                    _friendlyName = ProfileUrl.Replace("http://steamcommunity.com/id/", "");
+                    _friendlyName = _friendlyName.Substring(0, _friendlyName.Length - 1);
                 }
 
                 return _friendlyName;
@@ -105,45 +168,47 @@ namespace GotThatGame.Models
 
         #region Properties Pulled from Other Web Services
 
-        private IEnumerable<string> _friendSteamIds;
+        IEnumerable<Player> _friends = null;
 
-        [DataMember]
-        public IEnumerable<string> FriendSteamIds
+        /// <summary>
+        /// Loads the optoional friends field for this object (otherwise it will be null)
+        /// </summary>
+        public void LoadFriends()
         {
-            get
-            {
-                if (_friendSteamIds == null)
-                {
-                    
-                }
-
-                return _friendSteamIds;
-            }
-            set
-            {
-                _friendSteamIds = value;
-            }
+            _friends = GetFriendsOfPlayer(this);
         }
 
-        IEnumerable<Game> _gameList = null;
-
+        /// <summary>
+        /// Contains a 
+        /// </summary>
         [DataMember]
-        public IEnumerable<Game> GameList
+        public IEnumerable<Player> Friends
         {
             get
             {
-                if (_gameList == null)
-                {
-                    //init
-                    _gameList = Game.GetGamesForPlayer(FriendlyName);
-                }
+                return _friends;
+            }
+            set { }
+        }
 
-                return _gameList;
-            }
-            set
+        IEnumerable<Game> _games = null;
+
+        /// <summary>
+        /// Loads the optional games field for the current player (otherwise it will be null)
+        /// </summary>
+        public void LoadGames()
+        {
+            _games = Game.GetGamesForPlayer(FriendlyName);
+        }
+
+        [DataMember]
+        public IEnumerable<Game> Games
+        {
+            get
             {
-                _gameList = value;
+                return _games;
             }
+            set { }
         }
 
         #endregion

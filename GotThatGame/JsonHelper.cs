@@ -38,7 +38,35 @@ namespace GotThatGame
                 }
             }
 
-            throw new Exception(string.Format("Could not find property '{0}'", propertyName));
+            return null;
+        }
+
+        /// <summary>
+        /// Returns a list of each unique value in a given json string with the given property name
+        /// </summary>
+        /// <param name="json"></param>
+        /// <param name="properyName"></param>
+        /// <returns></returns>
+        public static IEnumerable<string> GetAllValuesForProperty(string json, string propertyName)
+        {
+            List<string> values = new List<string>();
+            using (StringReader sReader = new StringReader(json))
+            {
+                using (JsonTextReader reader = new JsonTextReader(sReader))
+                {
+                    while (reader.Read())
+                    {
+                        // find the "steamid" node
+                        if (reader.Value != null && reader.Value.ToString() == propertyName)
+                        {
+                            // hand back the next value
+                            reader.Read();
+                            values.Add(reader.Value.ToString());
+                        }
+                    }
+                }
+            }
+            return values;
         }
     }
 }

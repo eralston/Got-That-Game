@@ -11,12 +11,22 @@ using GotThatGame.Models;
 namespace GotThatGame.Test
 {
     [TestClass]
-    class SteamModelTest
+    public class SteamModelTest
     {
         [TestMethod]
         public void PlayerInit()
         {
-            Player player = Player.GetPlayerByFriendlyName("eralston");
+            Player player = Player.GetPlayerByFriendlyName("eralston", true);
+
+            Assert.IsNotNull(player);
+        }
+
+        [TestMethod]
+        public void GameTest()
+        {
+            var list = Game.GetGamesForPlayer("eralston");
+
+            Assert.IsNotNull(list);
         }
     }
 }
