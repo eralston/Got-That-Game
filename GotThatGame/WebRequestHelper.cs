@@ -22,7 +22,9 @@ namespace GotThatGame
         {
             try
             {
-                WebRequest request = WebRequest.Create(url);
+                HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
+                request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+                
                 WebResponse response = request.GetResponse();
                 using (Stream stream = response.GetResponseStream())
                 {

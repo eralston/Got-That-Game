@@ -1,4 +1,4 @@
-@{
+ @{
     ViewBag.Title = "Got That Game?";
 }
 
@@ -13,12 +13,44 @@
         <p>Connect to your <a href="http://steampowered.com">Steam</a> account to compare games with your friends. Login to get started!</p>
     </div>
 </section>
-<section class="main-app-window">
+<section id="currentPlayerInfo"  class='twoway'>
+
+</section>
+<section class="main-app-window twoway">
     <div id="_friendList" class="wrapper">
     </div>
     <div id="_gameList" class="wrapper">
     </div>
 </section>
+<script id="_currentPlayerProfileLoadingTemplate" type="text/html">
+    <div>
+        <span>Searching for Steam user {{Name}}...</span>
+        <img src="/Content/Images/ajax-loader.gif" alt="Loading..." />
+    </div>
+</script>
+<script id="_currentPlayerProfileTemplate" type="text/html">
+    <div>
+        <h2><a href="{{ProfileUrl}}" target="_blank">{{Name}}</a></h2>
+        <img src="{{AvatarLarge}}" />
+    </div>
+</script>
+<script id="_friendItemTemplate" type="text/html">
+    <div class="friend">
+        <img src="{{AvatarSmall}}" alt="{{FriendlyName}}" />
+        <span class="friend-name"><a href="{{ProfileUrl}}" target="_blank">{{FriendlyName}}</a></span>
+    </div>
+</script>
+<script id="_gameItemTemplate" type="text/html">
+    <div class="game">
+        <img src="{{ImageUrl}}" alt="{{Name}}" />
+        <span class="game-name"><a href="{{StoreUrl}}" target="_blank">{{Name}}</a></span>
+    </div>
+</script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js" type="text/javascript"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.3/underscore-min.js" type="text/javascript"></script>
+<script>
+    _.templateSettings = {
+        interpolate: /\{\{(.+?)\}\}/g
+    };
+</script>
 <script src="~/Scripts/Steam.js" type="text/javascript"></script>
