@@ -38,7 +38,7 @@ namespace GotThatGame.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        public JsonResult GamesByFriendlyName(string id)
+        public JsonResult GamesBySteamId(string id)
         {
             var games = Game.GetGamesForPlayer(id);
             return Json(games, JsonRequestBehavior.AllowGet);

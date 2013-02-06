@@ -125,9 +125,9 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Content Include="Content\GGS.css" />
     <Content Include="Content\Images\ajax-loader.gif" />
     <Content Include="Content\site.css" />
+    <Content Include="Content\steam.css" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\Steam.js" />
     <Content Include="Web.config" />

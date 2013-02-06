@@ -1,18 +1,32 @@
-﻿/* This is a manifest file that'll be compiled into application.css, which will include all the files
- * listed below.
- *
- * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
- * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
- *
- * You're free to add application-wide styles to this file and they'll appear at the top of the
- * compiled file, but it's generally better to create a new file per style scope.
- *
- *
- *
- */
-
+﻿/*
+* Site-wide styles shared across all pages
+* Copyright 2013, Erik Ralston    
+*/
 body {
   font-family: "Abel", "arial", sans-serif;
+  font-size: 16px;
+}
+
+header, footer, section {
+    width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h1 {
+    font-size: 2em;
+}
+
+h2 {
+    font-size: 1.5em;
+}
+
+h3 {
+    font-size: 1.25em;
+}
+
+h4 {
+    font-size: 1.1em;
 }
 
 h1, h2, h3, h4, h5, .logo {
@@ -86,36 +100,6 @@ footer h2 {
   height: 3em;
   text-decoration: none;
   text-shadow: 1px 1px 0 #f3f3f8, 2px 2px 0 #f3f3f8, 3px 3px 0 #8b8c8c, 4px 4px 0 #8b8c8c, 5px 5px 0 #8b8c8c, 6px 6px 0 #8b8c8c;
-}
-
-/* Steam button */
-@-webkit-keyframes logo-glow {
-  from {
-    box-shadow: 0 0 50px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
-  }
-  to {
-    box-shadow: 0 0 20px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
-  }
-}
-
-@-webkit-keyframes logo-glow-big {
-  from {
-    box-shadow: 0 0 80px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
-  }
-  to {
-    box-shadow: 0 0 30px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
-  }
-}
-
-.steam-login-button {
-  -webkit-animation: logo-glow 1s ease-in-out infinite alternate;
-  background-image: url("/Content/Images/sits_large_border.png");
-  border-radius: 7px;
-  box-shadow: 0 0 100px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
-  cursor: pointer;
-  height: 51px;
-  margin: 50px auto;
-  width: 118px;
 }
 
 .unseen {

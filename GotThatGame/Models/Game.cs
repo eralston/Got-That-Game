@@ -9,10 +9,15 @@ using System.Web;
 
 namespace GotThatGame.Models
 {
+    /// <summary>
+    /// Class for both querying games and transporting them between server and client as JSON
+    /// </summary>
     [DataContract]
     public class Game
     {
         #region Static Methods for Querying
+
+        
 
         /// <summary>
         /// Calls the Steam web API to get a given player's (by friendly ID AKA Vanity URL) game list as an XML document
@@ -20,9 +25,11 @@ namespace GotThatGame.Models
         /// </summary>
         /// <param name="friendlyName"></param>
         /// <returns></returns>
-        private static string GetGamesListXmlForFriendlyName(string friendlyName)
+        private static string GetGamesListXmlForFriendlyName(string steamId)
         {
-            string url = string.Format("http://steamcommunity.com/id/{0}/games?tab=all&xml=1", friendlyName);
+            // by steam ID: http://steamcommunity.com/profiles/76561197962215668/games/?tab=all&xml=1
+            // by vanity URL: http://steamcommunity.com/id/eralston/games?tab=all&xml=1
+            string url = string.Format("http://steamcommunity.com/profiles/{0}/games/?tab=all&xml=1", steamId);
             for (int i = 0; i < 10; ++i)
             {
                 var response = WebRequestHelper.GetResponseData(url);
@@ -38,10 +45,10 @@ namespace GotThatGame.Models
         /// </summary>
         /// <param name="friendlyName"></param>
         /// <returns></returns>
-        public static IEnumerable<Game> GetGamesForPlayer(string friendlyName)
+        public static IEnumerable<Game> GetGamesForPlayer(string steamId)
         {
             XmlDocument doc = new XmlDocument();
-            string xml = GetGamesListXmlForFriendlyName(friendlyName);
+            string xml = GetGamesListXmlForFriendlyName(steamId);
             doc.LoadXml(xml);
             XmlNodeList list = doc.GetElementsByTagName("game");
 
@@ -52,7 +59,7 @@ namespace GotThatGame.Models
                 games.Add(game);
             }
 
-            return games;
+            return games.OrderBy(g => g.Name);
         }
 
         #endregion

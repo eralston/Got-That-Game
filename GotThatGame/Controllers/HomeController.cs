@@ -6,10 +6,11 @@ using System.Web.Mvc;
 
 namespace GotThatGame.Controllers
 {
+    /// <summary>
+    /// A basic controller that just maps to views (this shouldn't have any logic in it)
+    /// </summary>
     public class HomeController : Controller
     {
-        //
-        // GET: /Home/
 
         public ActionResult Index()
         {

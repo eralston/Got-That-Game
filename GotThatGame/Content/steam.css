@@ -1,0 +1,96 @@
+﻿/*
+* Styles specific to the interactive Steam UI
+* Copyright 2013, Erik Ralston
+*/
+
+/* Friends area */
+.friend-list {
+    box-sizing:border-box;
+    width: 50%;
+    float:left;
+}
+
+.friend-list a {
+    text-decoration: none;
+}
+
+.friend-list-item {
+    border: 1px solid gray;
+    position: relative;
+    cursor:pointer;
+}
+
+.friend-list-item.selected {
+    background-color: lightgreen;
+}
+
+.friend-list-item .friend-name {
+    position: absolute;
+left: 3em;
+top: 0.5em;
+}
+
+/* Games Area */
+
+.game-list {
+    box-sizing:border-box;
+    width: 50%;
+    float: left;
+}
+
+.game-list-item {
+    border: 1px solid gray;
+    position:relative;
+}
+
+.game-list-item span {
+    position: absolute;
+    left: 9em;
+    top: 1em;
+}
+
+.game-list a {
+    text-decoration: none;
+}
+
+.game-list .thumbnail {
+    width: 8em;
+}
+
+/* Utility areas for AJAX  */
+
+.loading-player-wrapper {
+    width: 50%;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+/* Steam button */
+@-webkit-keyframes logo-glow {
+  from {
+    box-shadow: 0 0 50px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
+  }
+  to {
+    box-shadow: 0 0 20px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
+  }
+}
+
+@-webkit-keyframes logo-glow-big {
+  from {
+    box-shadow: 0 0 80px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
+  }
+  to {
+    box-shadow: 0 0 30px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
+  }
+}
+
+.steam-login-button {
+    -webkit-animation: logo-glow 1s ease-in-out infinite alternate;
+    background-image: url("/Content/Images/sits_large_border.png");
+    border-radius: 7px;
+    box-shadow: 0 0 100px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
+    cursor: pointer;
+    height: 51px;
+    margin: 50px auto;
+    width: 118px;
+}

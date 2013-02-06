@@ -1,7 +1,8 @@
- @{
+@{
     ViewBag.Title = "Got That Game?";
 }
 
+@*HTML content for this page*@
 <section class='twoway'>
     <div class="wrapper">
         <label>Username:</label>
@@ -13,39 +14,42 @@
         <p>Connect to your <a href="http://steampowered.com">Steam</a> account to compare games with your friends. Login to get started!</p>
     </div>
 </section>
-<section id="currentPlayerInfo"  class='twoway'>
-
+<section id="currentPlayerInfo" class='twoway'>
 </section>
 <section class="main-app-window twoway">
-    <div id="_friendList" class="wrapper">
+    <div id="_friendList" class="wrapper friend-list">
     </div>
-    <div id="_gameList" class="wrapper">
+    <div id="_gameList" class="wrapper game-list">
     </div>
 </section>
+
+@*HTML Templates used by Steam.js*@
 <script id="_currentPlayerProfileLoadingTemplate" type="text/html">
-    <div>
+    <div class="loading-player-wrapper">
         <span>Searching for Steam user {{Name}}...</span>
-        <img src="/Content/Images/ajax-loader.gif" alt="Loading..." />
+        <img src="/Content/Images/ajax-loader.gif" alt="Loading..." class="thumbnail" />
     </div>
 </script>
 <script id="_currentPlayerProfileTemplate" type="text/html">
-    <div>
+    <div class="current-player-wrapper">
         <h2><a href="{{ProfileUrl}}" target="_blank">{{Name}}</a></h2>
         <img src="{{AvatarLarge}}" />
     </div>
 </script>
 <script id="_friendItemTemplate" type="text/html">
-    <div class="friend">
-        <img src="{{AvatarSmall}}" alt="{{FriendlyName}}" />
-        <span class="friend-name"><a href="{{ProfileUrl}}" target="_blank">{{FriendlyName}}</a></span>
+    <div class="friend-list-item">
+        <img src="{{AvatarSmall}}" alt="{{Name}}" />
+        <span class="friend-name"><a href="{{ProfileUrl}}" target="_blank">{{Name}}</a></span>
     </div>
 </script>
 <script id="_gameItemTemplate" type="text/html">
-    <div class="game">
-        <img src="{{ImageUrl}}" alt="{{Name}}" />
+    <div class="game-list-item">
+        <img src="{{ImageUrl}}" alt="{{Name}}" class="thumbnail" />
         <span class="game-name"><a href="{{StoreUrl}}" target="_blank">{{Name}}</a></span>
     </div>
 </script>
+
+@*Script files for this page*@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js" type="text/javascript"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.3/underscore-min.js" type="text/javascript"></script>
 <script>

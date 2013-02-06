@@ -11,40 +11,6 @@ using GotThatGame.Controllers;
 
 namespace GotThatGame.Models
 {
-    //var api_key = "CF9A7722D2B3BF4AAE1437C6D5FED194";
-
-    //function getSteamId(friendlyName) {
-    //    // http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=CF9A7722D2B3BF4AAE1437C6D5FED194&vanityurl=eralston
-    //}
-
-    //function getProfile(steamId) {
-    //    // http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=CF9A7722D2B3BF4AAE1437C6D5FED194&steamids=76561197981883201
-    //}
-
-    //// returns a list of steam IDs
-    //function getFriends(steamId) {
-    //    // http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=CF9A7722D2B3BF4AAE1437C6D5FED194&steamid=76561197981883201&relationship=friend
-    //}
-
-    //// returns an array of games for the given steam di
-    //function getGames(steamid) {
-    //    //h ttp://steamcommunity.com/id/eralston/games?tab=all&xml=1
-    //}
-
-    //window.Steam = {
-    //    apiKey : "CF9A7722D2B3BF4AAE1437C6D5FED194",
-
-    //    getSteamId: function(friendlyName, success, failure) {
-    //        $.getJSON("http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=" + this.apiKey + "&vanityurl=" + friendlyName, function(ret){
-    //            success(ret.response.steamid);
-    //        }).error(failure);
-    //    },
-
-    //    getPlayer : function (friendlyName) {
-
-    //    }
-    //};
-
     /// <summary>
     /// A serializable class for pulling a player's profile, friends, and games
     /// </summary>
@@ -116,7 +82,7 @@ namespace GotThatGame.Models
             {
                 ret.Add(GetPlayerBySteamId(friendSteamId, false));
             }
-            return ret;
+            return ret.OrderBy(p => p.Name);
         }
 
         #endregion
@@ -137,32 +103,6 @@ namespace GotThatGame.Models
 
         [DataMember(Name = "avatarmedium")]
         public string AvatarLarge { get; set; }
-
-        #endregion
-
-        #region Properties Derived from JSON
-
-        private string _friendlyName = null;
-
-        /// <summary>
-        /// Gets the "Friendly Name" for this player by parsing the ProfileUrl (which is also called the "Vanity URL" by the web API documentation)
-        /// </summary>
-        [DataMember]
-        public string FriendlyName
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_friendlyName))
-                {
-                    // take the profile URL and chop out the vanity URL, which is the friendly name
-                    _friendlyName = ProfileUrl.Replace("http://steamcommunity.com/id/", "");
-                    _friendlyName = _friendlyName.Substring(0, _friendlyName.Length - 1);
-                }
-
-                return _friendlyName;
-            }
-            set { _friendlyName = value; }
-        }
 
         #endregion
 
@@ -198,7 +138,7 @@ namespace GotThatGame.Models
         /// </summary>
         public void LoadGames()
         {
-            _games = Game.GetGamesForPlayer(FriendlyName);
+            _games = Game.GetGamesForPlayer(SteamId);
         }
 
         [DataMember]

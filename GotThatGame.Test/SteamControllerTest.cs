@@ -29,7 +29,9 @@ namespace GotThatGame.Test
         {
             SteamController controller = new SteamController();
 
-            JsonResult result = controller.GamesByFriendlyName("eralston");
+            var player = GotThatGame.Models.Player.GetPlayerByFriendlyName("eralston");
+
+            JsonResult result = controller.GamesBySteamId(player.SteamId);
 
             Assert.IsNotNull(result.Data);
         }
