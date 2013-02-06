@@ -27,7 +27,7 @@
 <script id="_currentPlayerProfileLoadingTemplate" type="text/html">
     <div class="loading-player-wrapper">
         <span>Searching for Steam user {{Name}}...</span>
-        <img src="/Content/Images/ajax-loader.gif" alt="Loading..." class="thumbnail" />
+        <img src="/Content/Images/ajax-loader.gif" alt="Loading..." class="loader-image loading" />
     </div>
 </script>
 <script id="_currentPlayerProfileTemplate" type="text/html">
@@ -37,15 +37,17 @@
     </div>
 </script>
 <script id="_friendItemTemplate" type="text/html">
-    <div class="friend-list-item">
-        <img src="{{AvatarSmall}}" alt="{{Name}}" />
+    <div class="friend-list-item" data-id="{{SteamId}}">
+        <img src="{{AvatarSmall}}" alt="{{Name}}" class="thumbnail" />
         <span class="friend-name"><a href="{{ProfileUrl}}" target="_blank">{{Name}}</a></span>
+        <img src="/Content/Images/ajax-loader.gif" alt="Loading..." class="loader-image" />
     </div>
 </script>
 <script id="_gameItemTemplate" type="text/html">
-    <div class="game-list-item">
+    <div class="game-list-item" data-count="{{Count}}" data-name="{{Name}}">
         <img src="{{ImageUrl}}" alt="{{Name}}" class="thumbnail" />
         <span class="game-name"><a href="{{StoreUrl}}" target="_blank">{{Name}}</a></span>
+        <span class="game-count">{{Count}}</span>
     </div>
 </script>
 

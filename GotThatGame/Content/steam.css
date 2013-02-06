@@ -65,6 +65,22 @@ top: 0.5em;
     margin-right:auto;
 }
 
+/* */
+
+.loader-image {
+    display:none;
+}
+
+.loader-image.loading {
+    display:inline;
+}
+
+.friend-list .loader-image {
+    position: absolute;
+    right: 1em;
+    top: 0.5em;
+}
+
 /* Steam button */
 @-webkit-keyframes logo-glow {
   from {

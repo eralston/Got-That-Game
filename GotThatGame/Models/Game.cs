@@ -69,6 +69,7 @@ namespace GotThatGame.Models
         /// </summary>
         public Game()
         {
+            Count = -1;
         }
 
         /// <summary>
@@ -103,6 +104,9 @@ namespace GotThatGame.Models
 
         [DataMember]
         public string StoreUrl { get; set; }
+
+        [DataMember]
+        public int Count { get; set; }
 
         #endregion
     }

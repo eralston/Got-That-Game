@@ -15,17 +15,29 @@ namespace GotThatGame.Test
     public class SteamControllerTest
     {
         [TestMethod]
-        public void CurrentPlayerTest()
+        public void CurrentPlayerByFriendlyNameTest()
         {
             SteamController controller = new SteamController();
 
-            JsonResult result = controller.CurrentUserPlayer("eralston");
+            JsonResult result = controller.CurrentUserPlayerByFriendlyName("eralston");
 
             Assert.IsNotNull(result.Data);
         }
 
         [TestMethod]
-        public void GamesTest()
+        public void CurrentPlayerBySteamIdTest()
+        {
+            SteamController controller = new SteamController();
+
+            var player = GotThatGame.Models.Player.GetPlayerByFriendlyName("eralston");
+
+            JsonResult result = controller.CurrentUserPlayerBySteamId(player.SteamId);
+
+            Assert.IsNotNull(result.Data);
+        }
+
+        [TestMethod]
+        public void GamesBySteamIdTest()
         {
             SteamController controller = new SteamController();
 

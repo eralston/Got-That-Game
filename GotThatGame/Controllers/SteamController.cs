@@ -24,9 +24,23 @@ namespace GotThatGame.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        public JsonResult CurrentUserPlayer(string id)
+        public JsonResult CurrentUserPlayerByFriendlyName(string id)
         {
             Player currentPlayer = Player.GetPlayerByFriendlyName(id);
+            currentPlayer.LoadFriends();
+            currentPlayer.LoadGames();
+            return Json(currentPlayer, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Given a SteamId, returns a fully loaded player with friends and games
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult CurrentUserPlayerBySteamId(string id)
+        {
+            Player currentPlayer = Player.GetPlayerBySteamId(id);
             currentPlayer.LoadFriends();
             currentPlayer.LoadGames();
             return Json(currentPlayer, JsonRequestBehavior.AllowGet);
