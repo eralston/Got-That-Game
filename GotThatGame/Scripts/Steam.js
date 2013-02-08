@@ -38,8 +38,10 @@ function Steam(errorCallback) {
         for (appId in hashCount) {
             var count = hashCount[appId];
             var game = _.clone(allGames[appId]);
-            game.Count = count;
-            ret.push(game);
+            if (game) {
+                game.Count = count;
+                ret.push(game);
+            }
         }
         return ret;
     };
@@ -52,7 +54,7 @@ function Steam(errorCallback) {
     var setPlayerCache = function (key, player) {
         playerCache[key] = player;
         // try from localstorage
-        if (localStorage != undefined)
+        if (localStorage)
             localStorage.setItem("player" + key, JSON.stringify(player));
     };
 
@@ -195,6 +197,7 @@ function Steam(errorCallback) {
                 var player = getFromPlayerCache(steamId);
                 player.Games = games;
                 player.GamesHash = createGameHash(games);
+                setPlayerCache(player.SteamId, player);
                 callback(player);
             });
 
