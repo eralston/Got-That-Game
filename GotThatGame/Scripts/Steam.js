@@ -5,34 +5,38 @@ var playerProfileLoadingTemplate = null;
 var friendItemTemplate = null;
 var gameItemTemplate = null;
 
-
-
 ///
 /// Constructor for a Steam object that proxies to the SteamController class
 ///
 function Steam(errorCallback) {
 
-    this.playerCache = {};
-    this.playerGamesCache = {};
+    var playerCache = {};
     var allGames = {};
 
-    var createGameHash = function (arraysOfObjects, key) {
+    ///
+    /// Create a hash in the form (value of AppId property, object) for the given array of gamess
+    /// As a side-effect, this keeps a list of games that have passed through the system
+    ///
+    var createGameHash = function (arraysOfObjects) {
         var ret = {};
         for (i in arraysOfObjects) {
             var obj = arraysOfObjects[i];
-            ret[obj[key]] = obj;
+            ret[obj["AppId"]] = obj;
             // an accumulation of all games passing through the system
-            allGames[obj[key]] = obj;
+            allGames[obj["AppId"]] = obj;
         }
         return ret;
     };
 
+    ///
+    /// For a hash in the form (appId, count), returns an array of games from the local cache of all games
+    ///
     this.getGamesWithCounts = function (hashCount) {
         var ret = [];
         for (appId in hashCount) {
             var count = hashCount[appId];
             var game = _.clone(allGames[appId]);
-            game.count = count;
+            game.Count = count;
             ret.push(game);
         }
         return ret;
@@ -41,32 +45,93 @@ function Steam(errorCallback) {
     // CURRENT PLAYER (Player + Friends)
 
     ///
+    /// Sets the cache to store the given player under the given key
+    ///
+    var setPlayerCache = function (key, player) {
+        playerCache[key] = player;
+        // try from localstorage
+        if (localStorage != undefined)
+            localStorage.setItem("player" + key, player);
+    };
+
+    ///
+    /// Tries to retrieve the given player from the cache
+    ///
+    this.getFromPlayerCache = function (key) {
+        var val = playerCache[key];
+        if(val != undefined)
+            return val;
+
+        // try from localstorage
+        if (localStorage != undefined) {
+            // pull it from localStorage and also push it through to the player cache object
+            return playerCache[key] = localStorage.getItem("player" + key);
+        }
+
+        return undefined;
+    };
+
+    var getFromPlayerCache = this.getFromPlayerCache;
+
+    ///
+    /// Returns true if the given player is in the cache; otherwise returns false
+    ///
+    this.isPlayerInCache = function (key) {
+        var val = playerCache[key];
+        if (val != undefined)
+            return true;
+
+        // try from localstorage
+        if (localStorage != undefined) {
+            return localStorage["player" + key] != undefined;
+        }
+
+        return false;
+    };
+
+    var isPlayerInCache = this.isPlayerInCache;
+
+    ///
+    /// Returns true if the given player is in the cache with values fully loaded; otherwise, returns false
+    ///
+    this.isPlayerInCacheWithGameData = function (key) {
+        var player = getFromPlayerCache(key);
+        if (player == undefined)
+            return false;
+        return player.Games != undefined;
+    }
+
+    ///
     /// Loads a current player object over AJAX, calling via friendly name (AKA vanity URL)
     ///
     this.getCurrentPlayerByFriendlyName = function (friendlyName, callback) {
 
         // check the cache and return from there if we have it
-        var cache = this.playerCache;
-        if (friendlyName in cache)
-            callback(cache[friendlyName]);
+        var player = getFromPlayerCache(friendlyName);
+        if (player != undefined) {
+            callback(player);
+            return;
+        }
 
+        /// try from AJAX
         $.get("/Steam/CurrentUserPlayerByFriendlyName/" + friendlyName,
             function (player, textStatus, jqXHR) {
                 
                 // form cache of games
-                player.GamesHash = createGameHash(player.Games, "AppId");
+                player.GamesHash = createGameHash(player.Games);
 
                 // cache by both friendlyName and 
-                cache[friendlyName] = player;
-                cache[player.SteamId] = player;
+                setPlayerCache(friendlyName, player);
+                setPlayerCache(player.SteamId, player);
 
                 // if he brought friends, then also load them into the cache
                 if (player.Friends != undefined) {
                     for (i in player.Friends) {
                         var friend = player.Friends[i];
-                        cache[friend.SteamId] = friend;
+                        setPlayerCache(friend.SteamId, friend);
                     }
                 }
+
                 callback(player);
         });
     };
@@ -77,23 +142,18 @@ function Steam(errorCallback) {
     this.getCurrentPlayerBySteamId = function (steamId, callback) {
 
         // check the cache and return from there if we have it
-        var cache = this.playerCache;
-        if (steamId in cache)
-            callback(cache[steamId]);
+        var val = getFromPlayerCache(steamId);
+        if (val != undefined) {
+            callback(val);
+            return;
+        }
 
         $.get("/Steam/CurrentUserPlayerByFriendlyName/" + steamId,
             function (player, textStatus, jqXHR) {
-                cache[steamId] = player;
+                setPlayerCache(steamId, player);
                 callback(player);
             });
     };
-
-    ///
-    /// Returns the cached value for the given SteamId (undefined if not available)
-    ///
-    this.getCachedPlayer = function (steamId) {
-        return this.playerCache[steamId];
-    }
 
     // GAMES
 
@@ -102,32 +162,67 @@ function Steam(errorCallback) {
     ///
     this.getPlayerGamesBySteamId = function (steamId, callback) {
 
-        var playerCache = this.playerCache;
-
         // check the cache and return from there if we have it
-        var cache = this.playerGamesCache;
-        if (steamId in cache) {
-            callback(playerCache[steamId]);
+        var val = getFromPlayerCache(steamId);
+        if (val != undefined) {
+            if (val.Games != undefined) {
+                callback(val);
+                return;
+            }
         }
 
         // AJAX the game list
         $.get("/Steam/GamesBySteamId/" + steamId,
             function (games, textStatus, jqXHR) {
-                cache[steamId] = games;
-                var player = playerCache[steamId];
+                var player = getFromPlayerCache(steamId);
                 player.Games = games;
-                player.GamesHash = createGameHash(games, "AppId");
+                player.GamesHash = createGameHash(games);
                 callback(player);
             });
 
     };
+};
+
+///
+/// Instances of this object encapsulate the process for game collection comparison between the given player and their friends
+/// PRE-CONDITION: the game collection for the given player and every player object in their Friends attribute must be loaded from the service already
+///
+function GameCollectionComparison(currentPlayer) {
+
+    var comparisonHash = {};
 
     ///
-    /// Checks if the given steamId is loaded in the cache
+    /// Increments the value at the given key within the given hash
     ///
-    this.isPlayerLoaded = function (steamId) {
-        return steamId in this.playerCache;
-    };
+    var incrementHashAtKey = function (key) {
+        if (!(key in comparisonHash))
+            comparisonHash[key] = 1;
+        else
+            comparisonHash[key] = 1 + comparisonHash[key];
+    }
+
+    ///
+    /// Accumulates the count of shared games between the two player objects, modifying the given count hash
+    ///
+    var accumulateCount = function (player) {
+        for (appId in player.GamesHash) {
+            incrementHashAtKey(appId);
+        }
+    }
+
+    // perform the collection comparison
+
+    // count the player
+    accumulateCount(currentPlayer);
+
+    // accumulate the friends
+    for (i in friendSteamIds) {
+        var friend = steam.getFromPlayerCache(friendSteamIds[i]);
+        accumulateCount(friend);
+    }
+
+    // set the result of the accumulation
+    this.games = steam.getGamesWithCounts(comparisonHash);
 };
 
 // instance the steam object
@@ -161,7 +256,10 @@ function loadGames(games, displayAll) {
     $("#_gameList")
         .children().remove()
         .end()
-        .append($(gameHtml));
+        .append($(gameHtml))
+    if (gameHtml != "") {
+        $("#_gameList").children().tsort({ order: 'desc', attr: 'data-count' });
+    }
 }
 
 function loadCurrentPlayerGames() {
@@ -195,7 +293,6 @@ function loadCurrentPlayerSuccess(player) {
 /// Clears the UI of its current state, then asynchronously loads up a new user given the state of the username input
 ///
 function loadCurrentPlayer() {
-
     var username = $("#username").val();
     applyElementToPlayerInfo($(playerProfileLoadingTemplate({ Name: username })));
     steam.getCurrentPlayerByFriendlyName(username, loadCurrentPlayerSuccess);
@@ -206,44 +303,10 @@ function loadCurrentPlayer() {
 ///
 function areFriendsFullyLoaded() {
     for (i in friendSteamIds) {
-        if (!steam.isPlayerLoaded(friendSteamIds[i]))
+        if (!steam.isPlayerInCacheWithGameData(friendSteamIds[i]))
             return false;
     }
     return true;
-}
-
-///
-/// Increments the value at the given key within the given hash
-///
-function incrementHashAtKey(hash, key) {
-    if (!(key in hash))
-        hash[key] = 1;
-    else
-        hash[key] = 1 + hash[key];
-}
-
-///
-/// Accumulates the count of shared games between the two player objects, modifying the given count hash
-///
-function accumulateCount(currentPlayer, friend, countHash) {
-    for (playerAppId in currentPlayer.GamesHash) {
-        if (playerAppId in friend.GamesHash) {
-            incrementHashAtKey(countHash, playerAppId);
-        }
-    }
-}
-
-///
-/// Compares the game collections of the current player and the list of currently selected friends
-///
-function compareCollections() {
-    var countHash = {};
-    for (i in friendSteamIds) {
-        var friend = steam.getCachedPlayer(friendSteamIds[i]);
-        accumulateCount(currentPlayer, friend, countHash);
-    }
-    var games = steam.getGamesWithCounts(countHash);
-    loadGames(games);
 }
 
 ///
@@ -277,7 +340,9 @@ function calculateGameList() {
                 if (!areFriendsFullyLoaded())
                     return;
 
-                compareCollections();
+                // perform the comparison and display the results
+                var comparison = new GameCollectionComparison(currentPlayer);
+                loadGames(comparison.games);
             });
     });
 
@@ -288,6 +353,9 @@ function calculateGameList() {
 /// Called when the application first loads, performing first-time setup
 ///
 function load() {
+
+    if (localStorage)
+        localStorage.clear();
 
     // templates (specified in index.cshtml)
     playerProfileTemplate = _.template($("#_currentPlayerProfileTemplate").html());
