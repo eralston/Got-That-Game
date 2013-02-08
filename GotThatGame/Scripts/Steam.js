@@ -33,13 +33,14 @@ function Steam(errorCallback) {
     ///
     /// For a hash in the form (appId, count), returns an array of games from the local cache of all games
     ///
-    this.getGamesWithCounts = function (hashCount) {
+    this.getGamesWithCounts = function (hashCount, total) {
         var ret = [];
         for (appId in hashCount) {
             var count = hashCount[appId];
             var game = _.clone(allGames[appId]);
             if (game) {
                 game.Count = count;
+                game.Total = total;
                 ret.push(game);
             }
         }
@@ -106,7 +107,6 @@ function Steam(errorCallback) {
     }
 
     // load player cache on creation if we have localStorage
-
     if (localStorage) {
         for (var i = 0; i < localStorage.length; ++i) {
             var key = localStorage.key(i);
@@ -243,7 +243,7 @@ function GameCollectionComparison(currentPlayer) {
     }
 
     // set the result of the accumulation
-    this.games = steam.getGamesWithCounts(comparisonHash);
+    this.games = steam.getGamesWithCounts(comparisonHash, friendSteamIds.length + 1);
 };
 
 // instance the steam object
@@ -261,28 +261,42 @@ function applyElementToPlayerInfo(element) {
     $("#currentPlayerInfo")
             .children().remove()
             .end()
-            .append(element);
+            .append(element).hide().fadeIn(500);
 }
 
+///
+/// Displays the given game list for the user
+///
 function loadGames(games, displayAll) {
     // setup games
     var gameHtml = "";
     for (i in games) {
         var game = games[i];
-        if (!displayAll && game.count <= 0)
-            continue;
+        if (game.Count == undefined)
+            game.Count = 0;
+        if (game.Total == undefined)
+            game.Total = 0;
         gameHtml += gameItemTemplate(game);
     }
 
-    $("#_gameList")
+    var root =  $("#_gameList");
+    root
         .children().remove()
         .end()
-        .append($(gameHtml))
+        .append($(gameHtml));
+    if (displayAll)
+        root.addClass("current-player-games");
+    else
+        root.removeClass("current-player-games");
+
     if (gameHtml != "") {
         $("#_gameList").children().tsort({ order: 'desc', attr: 'data-count' });
     }
 }
 
+///
+/// Loads the current player's game collection
+///
 function loadCurrentPlayerGames() {
     loadGames(currentPlayer.Games, true);
 }
@@ -308,6 +322,15 @@ function loadCurrentPlayerSuccess(player) {
         .append($(friendHtml));
 
     loadGames(player.Games, true);
+
+    $(".main-app-window").fadeIn(500);
+}
+
+///
+/// Utility function for strings that remove leading and trailing whitespace
+///
+String.prototype.trim = function () {
+    return this.replace(/^\s+|\s+$/g, "");
 }
 
 ///
@@ -315,6 +338,9 @@ function loadCurrentPlayerSuccess(player) {
 ///
 function loadCurrentPlayer() {
     var username = $("#username").val();
+    username = username.trim();
+    if (username == "")
+        return;
     applyElementToPlayerInfo($(playerProfileLoadingTemplate({ Name: username })));
     steam.getCurrentPlayerByFriendlyName(username, loadCurrentPlayerSuccess);
 }
@@ -366,8 +392,6 @@ function calculateGameList() {
                 loadGames(comparison.games);
             });
     });
-
-    
 }
 
 ///
@@ -384,10 +408,15 @@ function load() {
     // events
     $("#connect").click(loadCurrentPlayer);
 
+    var debouncedLoadCurrentPlayer = _.debounce(loadCurrentPlayer, 500);
+
+    $("#username").keyup(debouncedLoadCurrentPlayer);
+
     $(".friend-list-item").live("click", function () {
         $(this).toggleClass("selected");
         calculateGameList();
     });
 }
 
+// fire the load function on document ready
 $(load);

@@ -3,23 +3,28 @@
 }
 
 @*HTML content for this page*@
-<section class='twoway'>
-    <div class="wrapper">
-        <label>Username:</label>
-        <input type="text" id="username" />
-        <input type="button" id="connect" value="Connect to Steam" />
+<section>
+    <div class="col-half">
+        <h2>Steam Username</h2>
+        <input type="text" id="username" placeholder="Steam Username"/>
     </div>
-    <div class='wrapper'>
-        <h2>Discover What to Play</h2>
-        <p>Connect to your <a href="http://steampowered.com">Steam</a> account to compare games with your friends. Login to get started!</p>
+    <div class='col-half'>
+        <h2>What Should We Play?</h2>
+        <p>Enter your <a href="http://steampowered.com">Steam</a> username and you will be able to view your game collection and easily compare it with friends. Never again will you have to ask: Got That Game? </p>
     </div>
 </section>
-<section id="currentPlayerInfo" class='twoway'>
+<section id="currentPlayerInfo">
 </section>
-<section class="main-app-window twoway">
-    <div id="_friendList" class="wrapper friend-list">
+<section class="main-app-window" style="display: none">
+    <div class="col-half">
+        <h2>Friends</h2>
+        <div id="_friendList" class="friend-list">
+        </div>
     </div>
-    <div id="_gameList" class="wrapper game-list">
+    <div class="col-half">
+        <h2>Games</h2>
+        <div id="_gameList" class="game-list">
+        </div>
     </div>
 </section>
 
@@ -31,6 +36,7 @@
     </div>
 </script>
 <script id="_currentPlayerProfileTemplate" type="text/html">
+    <h2>Your Profile</h2>
     <div class="current-player-wrapper">
         <h2><a href="{{ProfileUrl}}" target="_blank">{{Name}}</a></h2>
         <img src="{{AvatarLarge}}" />
@@ -48,7 +54,7 @@
         <a href="{{StoreUrl}}" target="_blank">
             <img src="{{ImageUrl}}" alt="{{Name}}" class="thumbnail" /></a>
         <span class="game-name"><a href="{{StoreUrl}}" target="_blank">{{Name}}</a></span>
-        <span class="game-count">{{Count}}</span>
+        <span class="game-count">{{Count}}/{{Total}}</span>
     </div>
 </script>
 

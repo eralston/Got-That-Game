@@ -28,33 +28,31 @@
     @RenderBody()
     <div class="clear"></div>
     <footer>
-        <div class='two-way'>
-            <div class='wrapper'>
-                <h3>Sitemap</h3>
-                <ul class='sitemap-list'>
-                    <li>
-                        @Html.ActionLink("Home", "Index", "Home")
-                    </li>
-                    <li>
-                        @Html.ActionLink("About", "About", "Home")
-                    </li>
-                    <li>
-                        @Html.ActionLink("Support", "Support", "Home")
-                    </li>
-                    <li>
-                        @Html.ActionLink("Legal", "Legal", "Home")
-                    </li>
-                    <li>
-                        <a href='http://steampowered.com'>Powered By Steam</a>
-                    </li>
-                </ul>
-            </div>
-            <div class='wrapper'>
-                <h3>Privacy</h3>
-                <p>
-                    Got This Game does not store personal information or share it with third-parties
-                </p>
-            </div>
+        <div class='wrapper'>
+            <h3>Sitemap</h3>
+            <ul class='sitemap-list'>
+                <li>
+                    @Html.ActionLink("Home", "Index", "Home")
+                </li>
+                <li>
+                    @Html.ActionLink("About", "About", "Home")
+                </li>
+                <li>
+                    @Html.ActionLink("Support", "Support", "Home")
+                </li>
+                <li>
+                    @Html.ActionLink("Legal", "Legal", "Home")
+                </li>
+                <li>
+                    <a href='http://steampowered.com'>Powered By Steam</a>
+                </li>
+            </ul>
+        </div>
+        <div class='wrapper'>
+            <h3>Privacy</h3>
+            <p>
+                Got This Game does not store personal information or share it with third-parties
+            </p>
         </div>
     </footer>
     <script type="text/javascript">

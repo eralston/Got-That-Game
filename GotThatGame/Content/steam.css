@@ -4,10 +4,10 @@
 */
 
 /* Friends area */
+
 .friend-list {
-    box-sizing:border-box;
-    width: 50%;
-    float:left;
+    padding-right: 2em;
+    margin-top: 1em;
 }
 
 .friend-list a {
@@ -15,9 +15,13 @@
 }
 
 .friend-list-item {
-    border: 1px solid gray;
+    border-top: 1px solid gray;
     position: relative;
     cursor:pointer;
+}
+
+.friend-list-item:hover {
+    background-color: gray;
 }
 
 .friend-list-item.selected {
@@ -26,20 +30,19 @@
 
 .friend-list-item .friend-name {
     position: absolute;
-left: 3em;
-top: 0.5em;
+    left: 3em;
+    top: 0.5em;
 }
 
 /* Games Area */
 
-.game-list {
-    box-sizing:border-box;
-    width: 50%;
-    float: left;
+.game-list{
+    margin-top: 1em;
+    border-bottom: 1px solid gray;
 }
 
 .game-list-item {
-    border: 1px solid gray;
+    border-top: 1px solid gray;
     position:relative;
 }
 
@@ -63,12 +66,27 @@ top: 0.5em;
     width: 8em;
 }
 
+.current-player-games .game-count {
+    display:none;
+}
+
 /* Utility areas for AJAX  */
 
 .loading-player-wrapper {
     width: 50%;
     margin-left:auto;
     margin-right:auto;
+}
+
+.current-player-wrapper {
+    position: relative;
+    margin: 1em auto;
+}
+
+.current-player-wrapper h2 {
+    position: absolute;
+    left: 3em;
+    top: 1em;
 }
 
 /* */
@@ -115,4 +133,19 @@ top: 0.5em;
     height: 51px;
     margin: 50px auto;
     width: 118px;
+}
+
+
+#username
+{
+    margin: 1em 1em;
+    font-size: 2em;
+    border-radius: 0.25em;
+    border: 2px solid gray;
+    font-family: 'Abel';
+    padding: 0.1em 0.2em;
+}
+
+#username[value=""] {
+    -webkit-animation: logo-glow 1s ease-in-out infinite alternate;
 }
