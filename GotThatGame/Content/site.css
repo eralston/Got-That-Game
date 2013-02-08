@@ -94,6 +94,11 @@ h1, h2, h3, h4, h5, .logo {
     float: left;
 }
 
+.col-third {
+    width: 33%;
+    float: left;
+}
+
 header, footer, section {
     width: 960px;
     margin-left: auto;
@@ -105,6 +110,10 @@ header, footer, section {
 
 ol, ul {
   list-style: none;
+}
+
+li {
+    margin: 0.5em 0;
 }
 
 body {

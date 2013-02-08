@@ -416,6 +416,9 @@ function load() {
         $(this).toggleClass("selected");
         calculateGameList();
     });
+
+    // kick off in the event of carried over value (like in firefox reload)
+    loadCurrentPlayer();
 }
 
 // fire the load function on document ready
