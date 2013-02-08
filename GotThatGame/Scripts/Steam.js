@@ -70,7 +70,15 @@ function Steam(errorCallback) {
         // try from localstorage
         if (localStorage != undefined) {
             // pull it from localStorage and also push it through to the player cache object
-            return playerCache[key] = JSON.parse(localStorage["player" + key]);
+            var cachedVal = localStorage["player" + key];
+            if (cachedVal) {
+                try {
+                    return playerCache[key] = JSON.parse(cachedVal);
+                }
+                catch (err) {
+                    localStorage[key] = undefined;
+                }
+            }
         }
 
         return undefined;
@@ -110,10 +118,15 @@ function Steam(errorCallback) {
     if (localStorage) {
         for (var i = 0; i < localStorage.length; ++i) {
             var key = localStorage.key(i);
-            if(key.indexOf("player") == 0) {
-                var item = JSON.parse(localStorage[key]);
-                if(item) {
-                    item.GamesHash = createGameHash(item.Games);
+            if (key.indexOf("player") == 0) {
+                try {
+                    var item = JSON.parse(localStorage[key]);
+                    if(item) {
+                        item.GamesHash = createGameHash(item.Games);
+                    }
+                }
+                catch (err) {
+                    localStorage[key] = undefined;
                 }
             }            
         }
