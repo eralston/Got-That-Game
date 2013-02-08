@@ -45,7 +45,8 @@
 </script>
 <script id="_gameItemTemplate" type="text/html">
     <div class="game-list-item" data-count="{{Count}}" data-name="{{Name}}">
-        <img src="{{ImageUrl}}" alt="{{Name}}" class="thumbnail" />
+        <a href="{{StoreUrl}}" target="_blank">
+            <img src="{{ImageUrl}}" alt="{{Name}}" class="thumbnail" /></a>
         <span class="game-name"><a href="{{StoreUrl}}" target="_blank">{{Name}}</a></span>
         <span class="game-count">{{Count}}</span>
     </div>

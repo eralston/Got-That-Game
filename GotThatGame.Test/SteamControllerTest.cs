@@ -47,5 +47,17 @@ namespace GotThatGame.Test
 
             Assert.IsNotNull(result.Data);
         }
+
+        [TestMethod]
+        public void GamesBySteamIdWeirdTest()
+        {
+            SteamController controller = new SteamController();
+
+            var player = GotThatGame.Models.Player.GetPlayerByFriendlyName("CmdrPage");
+
+            JsonResult result = controller.GamesBySteamId(player.SteamId);
+
+            Assert.IsNotNull(result.Data);
+        }
     }
 }

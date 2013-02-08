@@ -18,14 +18,16 @@ function Steam(errorCallback) {
     /// As a side-effect, this keeps a list of games that have passed through the system
     ///
     var createGameHash = function (arraysOfObjects) {
-        var ret = {};
-        for (i in arraysOfObjects) {
-            var obj = arraysOfObjects[i];
-            ret[obj["AppId"]] = obj;
-            // an accumulation of all games passing through the system
-            allGames[obj["AppId"]] = obj;
+        if (arraysOfObjects) {
+            var ret = {};
+            for (i in arraysOfObjects) {
+                var obj = arraysOfObjects[i];
+                ret[obj["AppId"]] = obj;
+                // an accumulation of all games passing through the system
+                allGames[obj["AppId"]] = obj;
+            }
+            return ret;
         }
-        return ret;
     };
 
     ///
@@ -42,7 +44,7 @@ function Steam(errorCallback) {
         return ret;
     };
 
-    // CURRENT PLAYER (Player + Friends)
+    // PLAYER CACHE
 
     ///
     /// Sets the cache to store the given player under the given key
@@ -51,7 +53,7 @@ function Steam(errorCallback) {
         playerCache[key] = player;
         // try from localstorage
         if (localStorage != undefined)
-            localStorage.setItem("player" + key, player);
+            localStorage.setItem("player" + key, JSON.stringify(player));
     };
 
     ///
@@ -65,7 +67,7 @@ function Steam(errorCallback) {
         // try from localstorage
         if (localStorage != undefined) {
             // pull it from localStorage and also push it through to the player cache object
-            return playerCache[key] = localStorage.getItem("player" + key);
+            return playerCache[key] = JSON.parse(localStorage["player" + key]);
         }
 
         return undefined;
@@ -100,6 +102,22 @@ function Steam(errorCallback) {
             return false;
         return player.Games != undefined;
     }
+
+    // load player cache on creation if we have localStorage
+
+    if (localStorage) {
+        for (var i = 0; i < localStorage.length; ++i) {
+            var key = localStorage.key(i);
+            if(key.indexOf("player") == 0) {
+                var item = JSON.parse(localStorage[key]);
+                if(item) {
+                    item.GamesHash = createGameHash(item.Games);
+                }
+            }            
+        }
+    }
+
+    // CURRENT PLAYER (Player + Friends)
 
     ///
     /// Loads a current player object over AJAX, calling via friendly name (AKA vanity URL)
@@ -353,9 +371,6 @@ function calculateGameList() {
 /// Called when the application first loads, performing first-time setup
 ///
 function load() {
-
-    if (localStorage)
-        localStorage.clear();
 
     // templates (specified in index.cshtml)
     playerProfileTemplate = _.template($("#_currentPlayerProfileTemplate").html());

@@ -43,9 +43,15 @@ top: 0.5em;
     position:relative;
 }
 
-.game-list-item span {
+.game-list-item .game-name {
     position: absolute;
     left: 9em;
+    top: 1em;
+}
+
+.game-list-item .game-count {
+    position: absolute;
+    right: 1em;
     top: 1em;
 }
 
