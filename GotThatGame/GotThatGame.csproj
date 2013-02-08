@@ -126,6 +126,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="Content\Images\ajax-loader.gif" />
+    <Content Include="Content\Images\txture.png" />
     <Content Include="Content\site.css" />
     <Content Include="Content\steam.css" />
     <Content Include="Global.asax" />
