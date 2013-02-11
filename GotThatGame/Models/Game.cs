@@ -49,6 +49,7 @@ namespace GotThatGame.Models
         {
             XmlDocument doc = new XmlDocument();
             string xml = GetGamesListXmlForFriendlyName(steamId);
+            ApiHelper.ValidateXml(xml);
             doc.LoadXml(xml);
             XmlNodeList list = doc.GetElementsByTagName("game");
 

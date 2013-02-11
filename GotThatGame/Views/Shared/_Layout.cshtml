@@ -1,4 +1,5 @@
-﻿@{
+﻿@using System.Web.Optimization
+@{
     Layout = null;
 }
 
@@ -13,14 +14,14 @@
 
     @*CSS*@
     <link href='http://fonts.googleapis.com/css?family=Abel|Aldrich' rel='stylesheet' type='text/css' />
-    <link href="~/Content/site.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/steam.css" rel="stylesheet" type="text/css" />
+    @Styles.Render("~/Content/steam")
 </head>
 <body>
     <div class='header-wrapper'>
         <header>
             <div class='wrapper'>
                 <a class='logo huge' href='/'>Got&nbsp;That&nbsp;Game?</a>
+                <span style="">Beta</span>
             </div>
         </header>
     </div>

@@ -14,7 +14,7 @@ namespace GotThatGame.Test
     public class SteamModelTest
     {
         [TestMethod]
-        public void PlayerInit()
+        public void PlayerTest()
         {
             Player player = Player.GetPlayerByFriendlyName("eralston", true);
 
@@ -24,7 +24,9 @@ namespace GotThatGame.Test
         [TestMethod]
         public void GameTest()
         {
-            var list = Game.GetGamesForPlayer("eralston");
+            Player player = Player.GetPlayerByFriendlyName("eralston", true);
+
+            var list = Game.GetGamesForPlayer(player.SteamId);
 
             Assert.IsNotNull(list);
         }
