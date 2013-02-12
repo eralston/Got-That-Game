@@ -1,14 +1,16 @@
 @using System.Web.Optimization
 
 @{
-    ViewBag.Title = "Got That Game?";
+    ViewBag.Title = "Got That Game? - A simple way to compare Steam game collections";
 }
+
+<link rel="stylesheet" href="~/Content/Fonts/fontawesome.css" />
 
 @*HTML content for this page*@
 <section>
     <div class="col-half">
         <h2>Steam Username</h2>
-        <input type="text" id="username" placeholder="Steam Username"/>
+        <input type="text" id="username" placeholder="Steam Username" />
     </div>
     <div class='col-half'>
         <h2>What Should We Play?</h2>
@@ -41,15 +43,19 @@
 <script id="_currentPlayerProfileTemplate" type="text/html">
     <h2>Your Profile</h2>
     <div class="current-player-wrapper">
-        <h2><a href="{{ProfileUrl}}" target="_blank">{{Name}}</a></h2>
+        <span class="current-player-name"><a href="{{ProfileUrl}}" target="_blank">{{Name}}</a></span>
         <img src="{{AvatarLarge}}" />
+        <i class="icon-refresh"></i>
     </div>
 </script>
 <script id="_friendItemTemplate" type="text/html">
     <div class="friend-list-item" data-id="{{SteamId}}">
         <img src="{{AvatarSmall}}" alt="{{Name}}" class="thumbnail" />
         <span class="friend-name"><a href="{{ProfileUrl}}" target="_blank">{{Name}}</a></span>
-        <img src="/Content/Images/ajax-loader.gif" alt="Loading..." class="loader-image" />
+        <div class="friend-refresh icon-refresh"></div>
+        <div class="friend-loading icon-spinner"></div>
+        <div class="friend-add icon-plus-sign"></div>
+        <div class="friend-added icon-ok-sign"></div>
     </div>
 </script>
 <script id="_gameItemTemplate" type="text/html">

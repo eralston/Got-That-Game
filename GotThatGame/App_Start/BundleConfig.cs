@@ -19,7 +19,8 @@ namespace GotThatGame
 
             bundles.Add(new StyleBundle("~/Content/steam").Include(
                         "~/Content/site.css",
-                        "~/Content/steam.css"));
+                        "~/Content/steam.css",
+                        "~/Content/Fonts/fontawesome.css"));
         }
     }
 }

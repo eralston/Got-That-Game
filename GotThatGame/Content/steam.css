@@ -10,53 +10,49 @@
     margin-top: 1em;
 }
 
-.friend-list a {
-    text-decoration: none;
-}
+    .friend-list a {
+        text-decoration: none;
+    }
 
 .friend-list-item {
     border-top: 1px solid gray;
     position: relative;
-    cursor:pointer;
+    cursor: pointer;
 }
 
-.friend-list-item:hover {
-    background-color: gray;
-}
+    .friend-list-item:hover {
+        background-color: darkgr;
+    }
 
-.friend-list-item.selected {
-    background-color: lightgreen;
-}
-
-.friend-list-item .friend-name {
-    position: absolute;
-    left: 3em;
-    top: 0.5em;
-}
+    .friend-list-item .friend-name {
+        position: absolute;
+        left: 3em;
+        top: 0.5em;
+    }
 
 /* Games Area */
 
-.game-list{
+.game-list {
     margin-top: 1em;
     border-bottom: 1px solid gray;
 }
 
 .game-list-item {
     border-top: 1px solid gray;
-    position:relative;
+    position: relative;
 }
 
-.game-list-item .game-name {
-    position: absolute;
-    left: 9em;
-    top: 1em;
-}
+    .game-list-item .game-name {
+        position: absolute;
+        left: 9em;
+        top: 1em;
+    }
 
-.game-list-item .game-count {
-    position: absolute;
-    right: 1em;
-    top: 1em;
-}
+    .game-list-item .game-count {
+        position: absolute;
+        right: 1em;
+        top: 1em;
+    }
 
 .game-list a {
     text-decoration: none;
@@ -67,15 +63,15 @@
 }
 
 .current-player-games .game-count {
-    display:none;
+    display: none;
 }
 
 /* Utility areas for AJAX  */
 
 .loading-player-wrapper {
     width: 50%;
-    margin-left:auto;
-    margin-right:auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .current-player-wrapper {
@@ -83,45 +79,85 @@
     margin: 1em auto;
 }
 
-.current-player-wrapper h2 {
+    .current-player-wrapper .current-player-name {
+        position: absolute;
+        left: 3em;
+        top: 1em;
+        text-decoration: none;
+        font-size: 1.5em;
+    }
+
+/* Icons for friends */
+.friend-refresh {
+    display: none !important;
     position: absolute;
-    left: 3em;
-    top: 1em;
+    right: 2.5em;
+    top: 0.7em;
 }
 
-/* */
-
-.loader-image {
-    display:none;
+.friends-list-item.selected .friend-refresh, .friend-list-item:hover .friend-refresh {
+    display: block !important;
 }
 
-.loader-image.loading {
-    display:inline;
-}
-
-.friend-list .loader-image {
+.friend-list-item .friend-add {
+    display: none;
     position: absolute;
     right: 1em;
-    top: 0.5em;
+    top: 0.7em;
+}
+
+.friend-list-item:hover .friend-add {
+    display: block !important;
+}
+.selected.friend-list-item:hover .friend-add {
+    display: none !important;
+}
+
+.friend-added {
+    display: none !important;
+    position: absolute;
+    right: 1em;
+    top: 0.7em;
+}
+
+.selected .friend-added {
+    display: block !important;
+}
+
+.friend-list-item .friend-loading {
+    display: none !important;
+    position: absolute;
+    right: 2.5em;
+    top: 0.7em;
+}
+
+.friend-list-item.loading .friend-loading {
+    display: block !important;
+}
+
+.friend-list-item.loading .friend-refresh {
+    display: none !important;
 }
 
 /* Steam button */
 @-webkit-keyframes logo-glow {
-  from {
-    box-shadow: 0 0 50px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
-  }
-  to {
-    box-shadow: 0 0 20px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
-  }
+    from {
+        box-shadow: 0 0 50px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
+    }
+
+    to {
+        box-shadow: 0 0 20px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
+    }
 }
 
 @-webkit-keyframes logo-glow-big {
-  from {
-    box-shadow: 0 0 80px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
-  }
-  to {
-    box-shadow: 0 0 30px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
-  }
+    from {
+        box-shadow: 0 0 80px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
+    }
+
+    to {
+        box-shadow: 0 0 30px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
+    }
 }
 
 .steam-login-button {
@@ -136,8 +172,7 @@
 }
 
 
-#username
-{
+#username {
     margin: 1em 1em;
     font-size: 2em;
     border-radius: 0.25em;
@@ -146,6 +181,6 @@
     padding: 0.1em 0.2em;
 }
 
-#username[value=""] {
-    -webkit-animation: logo-glow 1s ease-in-out infinite alternate;
-}
+    #username[value=""] {
+        -webkit-animation: logo-glow 1s ease-in-out infinite alternate;
+    }

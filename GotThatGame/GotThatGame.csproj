@@ -135,6 +135,9 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Content Include="Content\Fonts\fontawesome-ie7.css" />
+    <Content Include="Content\Fonts\fontawesome.css" />
+    <Content Include="Content\Fonts\icon-reference.html" />
     <Content Include="Content\Images\ajax-loader.gif" />
     <Content Include="Content\Images\txture.png" />
     <Content Include="Content\site.css" />
@@ -179,6 +182,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\_ViewStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Fonts\fontawesome-ie7.less" />
+    <Content Include="Content\Fonts\fontawesome-webfont.afm" />
+    <Content Include="Content\Fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\Fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\Fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\Fonts\fontawesome.less" />
+    <Content Include="Content\Fonts\fontawesome.sass" />
+    <Content Include="Content\Fonts\fontawesome.scss" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -387,14 +387,14 @@ function calculateGameList() {
     selectedElements.each(function () {
         var playerListItem = $(this);
         playerListItem.attr("data-loading", "true");
-        playerListItem.find(".loader-image").addClass("loading");
+        playerListItem.addClass("loading");
         var steamId = playerListItem.attr("data-id");
         friendSteamIds.push(steamId);
         steam.getPlayerGamesBySteamId(steamId,
             function () {
 
                 // hide the loader image since we're done loading
-                playerListItem.find(".loader-image").removeClass("loading");
+                playerListItem.removeClass("loading");
 
                 // if all friends are not loaded, then we must try again later
                 if (!areFriendsFullyLoaded())

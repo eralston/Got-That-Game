@@ -1,4 +1,4 @@
-﻿@using System.Web.Optimization
+@using System.Web.Optimization
 @{
     Layout = null;
 }
@@ -10,6 +10,12 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="A simple way to compare Steam game collections with friends" />
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <meta name="Author" content="Erik Ralston">
+    <meta name="copyright" content="Copyright 2013">
+    <meta name="robots" content="index, follow">
+    <meta name="Title" content="@ViewBag.Title">
     <title>@ViewBag.Title</title>
 
     @*CSS*@
@@ -21,7 +27,7 @@
         <header>
             <div class='wrapper'>
                 <a class='logo huge' href='/'>Got&nbsp;That&nbsp;Game?</a>
-                <span style="">Beta</span>
+                <span style="margin-left:1em">Beta</span>
             </div>
         </header>
     </div>
@@ -49,11 +55,15 @@
                 </li>
             </ul>
         </div>
-        <div class="col-third">&nbsp;</div>
-        <div class='col-third'>
+        <div class="col-third">
             <h3>Privacy</h3>
             <p>
                 Got This Game does not store personal information or share it with third-parties
+            </p>
+        </div>
+        <div class='col-third'>
+            <p>
+                Created by <a href="http://erik-ralston.com" target="_blank">Erik Ralston</a>
             </p>
         </div>
     </footer>
