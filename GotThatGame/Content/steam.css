@@ -20,8 +20,13 @@
     cursor: pointer;
 }
 
+    .friend-list-item.selected {
+        background-image: url("/Content/Images/txture.png");
+    }
+
     .friend-list-item:hover {
-        background-color: darkgr;
+        background-color: gray;
+        background-image:none;
     }
 
     .friend-list-item .friend-name {
@@ -29,6 +34,8 @@
         left: 3em;
         top: 0.5em;
     }
+
+
 
 /* Games Area */
 
@@ -109,6 +116,7 @@
 .friend-list-item:hover .friend-add {
     display: block !important;
 }
+
 .selected.friend-list-item:hover .friend-add {
     display: none !important;
 }
