@@ -222,6 +222,10 @@
     <Content Include="Content\site.sass" />
     <Content Include="Content\steam.sass" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\PublishProfiles\GotThatGame-Beta - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\GotThatGame-Beta - Web Deploy.pubxml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
