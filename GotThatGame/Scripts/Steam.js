@@ -64,7 +64,7 @@ function Steam(errorCallback) {
     ///
     this.getFromPlayerCache = function (key) {
         var val = playerCache[key];
-        if(val != undefined)
+        if (val != undefined)
             return val;
 
         // try from localstorage
@@ -121,14 +121,14 @@ function Steam(errorCallback) {
             if (key.indexOf("player") == 0) {
                 try {
                     var item = JSON.parse(localStorage[key]);
-                    if(item) {
+                    if (item) {
                         item.GamesHash = createGameHash(item.Games);
                     }
                 }
                 catch (err) {
                     localStorage[key] = undefined;
                 }
-            }            
+            }
         }
     }
 
@@ -149,7 +149,7 @@ function Steam(errorCallback) {
         /// try from AJAX
         $.get("/Steam/CurrentUserPlayerByFriendlyName/" + friendlyName,
             function (player, textStatus, jqXHR) {
-                
+
                 // form cache of games
                 player.GamesHash = createGameHash(player.Games);
 
@@ -166,7 +166,7 @@ function Steam(errorCallback) {
                 }
 
                 callback(player);
-        });
+            });
     };
 
     ///
@@ -259,6 +259,30 @@ function GameCollectionComparison(currentPlayer) {
     this.games = steam.getGamesWithCounts(comparisonHash, friendSteamIds.length + 1);
 };
 
+// Model for players, including friends and games
+var Player = Backbone.Model.extend({
+
+    initialize: function () {
+        _.bindAll(this, "load", "loadDone", "loadGames", "loadGamesDone","loadFriends", "loadFriendsDone");
+    },
+
+    load: function() {
+    },
+    loadDone: function() {
+    },
+
+    loadGames: function () {
+    },
+    loadGamesDone: function() {
+    },
+
+
+    loadFriends: function () {
+    },
+    loadFriendsDone: function () {
+    }
+});
+
 // instance the steam object
 window.steam = new Steam();
 
@@ -292,7 +316,7 @@ function loadGames(games, displayAll) {
         gameHtml += gameItemTemplate(game);
     }
 
-    var root =  $("#_gameList");
+    var root = $("#_gameList");
     root
         .children().remove()
         .end()
@@ -373,7 +397,7 @@ function areFriendsFullyLoaded() {
 /// Calculates the right-side game list from the current selection, performing async update when needed
 ///
 function calculateGameList() {
-    
+
     friendSteamIds = [];
 
     var selectedElements = $(".friend-list .selected");
