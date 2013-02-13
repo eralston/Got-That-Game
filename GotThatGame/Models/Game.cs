@@ -17,8 +17,6 @@ namespace GotThatGame.Models
     {
         #region Static Methods for Querying
 
-        
-
         /// <summary>
         /// Calls the Steam web API to get a given player's (by friendly ID AKA Vanity URL) game list as an XML document
         /// NOTE: The API seems to be unreliable and this will attempt 10 times before giving up
@@ -32,9 +30,11 @@ namespace GotThatGame.Models
             string url = string.Format("http://steamcommunity.com/profiles/{0}/games/?tab=all&xml=1", steamId);
             for (int i = 0; i < 10; ++i)
             {
-                var response = WebRequestHelper.GetResponseData(url);
+                var response = WebRequestHelper.GetResponseData(url, true);
                 if (response != null)
                     return response;
+                else
+                    System.Threading.Thread.Sleep(0);
             }
 
             return null;

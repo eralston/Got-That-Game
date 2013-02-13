@@ -11,19 +11,33 @@ using Newtonsoft.Json.Linq;
 
 namespace GotThatGame
 {
+    /// <summary>
+    /// Statis helper class for making web requests
+    /// </summary>
     public static class WebRequestHelper
     {
+        /// <summary>
+        /// Static constructor
+        /// Called only once on first static method call
+        /// </summary>
+        static WebRequestHelper()
+        {
+            System.Net.ServicePointManager.Expect100Continue = false;
+        }
+
         /// <summary>
         /// Returns the data stream for a GET on the given URL
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public static string GetResponseData(string url)
+        public static string GetResponseData(string url, bool xmlRequest = false)
         {
             try
             {
                 HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
-                request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+
+                request.AllowAutoRedirect = true;
+                request.Accept = "*/*";
                 
                 WebResponse response = request.GetResponse();
                 using (Stream stream = response.GetResponseStream())

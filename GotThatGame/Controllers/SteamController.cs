@@ -33,17 +33,39 @@ namespace GotThatGame.Controllers
         }
 
         /// <summary>
-        /// Given a SteamId, returns a fully loaded player with friends and games
+        /// Given a friendly name (AKA Vanity URL), returns a header for the player
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        public JsonResult CurrentUserPlayerBySteamId(string id)
+        public JsonResult PlayerByFriendlyName(string id)
+        {
+            Player currentPlayer = Player.GetPlayerByFriendlyName(id);
+            return Json(currentPlayer, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Given a Steam ID, returns a header for a player
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult PlayerBySteamId(string id)
         {
             Player currentPlayer = Player.GetPlayerBySteamId(id);
-            currentPlayer.LoadFriends();
-            currentPlayer.LoadGames();
             return Json(currentPlayer, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Given a Steam ID, pulls the list of friend player headers
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult FriendsBySteamId(string id)
+        {
+            IEnumerable<Player> friends = Player.GetFriendsOfPlayerBySteamId(id);
+            return Json(friends, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>

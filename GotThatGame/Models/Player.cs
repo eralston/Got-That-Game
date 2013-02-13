@@ -76,8 +76,18 @@ namespace GotThatGame.Models
         /// <returns></returns>
         public static IEnumerable<Player> GetFriendsOfPlayer(Player player)
         {
+            return GetFriendsOfPlayerBySteamId(player.SteamId);
+        }
+
+        /// <summary>
+        /// Gets a list of player object values for the given steamId
+        /// </summary>
+        /// <param name="steamId"></param>
+        /// <returns></returns>
+        public static IEnumerable<Player> GetFriendsOfPlayerBySteamId(string steamId)
+        {
             List<Player> ret = new List<Player>();
-            IEnumerable<string> friendSteamIds = GetFriendSteamIds(player.SteamId);
+            IEnumerable<string> friendSteamIds = GetFriendSteamIds(steamId);
             foreach (string friendSteamId in friendSteamIds)
             {
                 ret.Add(GetPlayerBySteamId(friendSteamId, false));

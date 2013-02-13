@@ -96,7 +96,6 @@
     <Compile Include="HomeControllerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SteamControllerTest.cs" />
-    <Compile Include="SteamModelTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />

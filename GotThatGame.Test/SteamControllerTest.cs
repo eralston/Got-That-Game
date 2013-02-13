@@ -11,53 +11,72 @@ using GotThatGame.Controllers;
 
 namespace GotThatGame.Test
 {
-	[TestClass]
+    [TestClass]
     public class SteamControllerTest
     {
         [TestMethod]
-        public void CurrentPlayerByFriendlyNameTest()
+        public void CurrentUserPlayerByFriendlyNameTest()
         {
-            SteamController controller = new SteamController();
+            // Arrange
+            var controller = new SteamController();
 
-            JsonResult result = controller.CurrentUserPlayerByFriendlyName("eralston");
+            // Act
+            var result = controller.CurrentUserPlayerByFriendlyName("eralston");
 
-            Assert.IsNotNull(result.Data);
+            // Assert
+            Assert.IsNotNull(result); // Todo: Make assertions, then remove this line
         }
 
         [TestMethod]
-        public void CurrentPlayerBySteamIdTest()
+        public void PlayerByFriendlyNameTest()
         {
-            SteamController controller = new SteamController();
+            // Arrange
+            var controller = new SteamController();
 
-            var player = GotThatGame.Models.Player.GetPlayerByFriendlyName("eralston");
+            // Act
+            var result = controller.PlayerByFriendlyName("eralston");
 
-            JsonResult result = controller.CurrentUserPlayerBySteamId(player.SteamId);
+            // Assert
+            Assert.IsNotNull(result); // Todo: Make assertions, then remove this line
+        }
 
-            Assert.IsNotNull(result.Data);
+        [TestMethod]
+        public void PlayerBySteamIdTest()
+        {
+            // Arrange
+            var controller = new SteamController();
+
+            // Act
+            var result = controller.PlayerBySteamId(GotThatGame.Models.Player.GetSteamIdByFriendlyName("eralston"));
+
+            // Assert
+            Assert.IsNotNull(result); // Todo: Make assertions, then remove this line
+        }
+
+        [TestMethod]
+        public void FriendsBySteamIdTest()
+        {
+            // Arrange
+            var controller = new SteamController();
+
+            // Act
+            var result = controller.FriendsBySteamId(GotThatGame.Models.Player.GetSteamIdByFriendlyName("eralston"));
+
+            // Assert
+            Assert.IsNotNull(result); // Todo: Make assertions, then remove this line
         }
 
         [TestMethod]
         public void GamesBySteamIdTest()
         {
-            SteamController controller = new SteamController();
+            // Arrange
+            var controller = new SteamController();
 
-            var player = GotThatGame.Models.Player.GetPlayerByFriendlyName("eralston");
+            // Act
+            var result = controller.GamesBySteamId(GotThatGame.Models.Player.GetSteamIdByFriendlyName("eralston"));
 
-            JsonResult result = controller.GamesBySteamId(player.SteamId);
-
-            Assert.IsNotNull(result.Data);
-        }
-
-        [TestMethod]
-        public void GamesBySteamIdWeirdTest()
-        {
-            SteamController controller = new SteamController();
-
-            var player = GotThatGame.Models.Player.GetPlayerByFriendlyName("CmdrPage");
-
-            JsonResult result = controller.GamesBySteamId(player.SteamId);
-
-            Assert.IsNotNull(result.Data);
+            // Assert
+            Assert.IsNotNull(result); // Todo: Make assertions, then remove this line
         }
     }
 }

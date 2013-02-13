@@ -219,9 +219,6 @@
     <Content Include="Content\Fonts\fontawesome.sass" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="combres.readme" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Content\site.sass" />
     <Content Include="Content\steam.sass" />
   </ItemGroup>
