@@ -38,13 +38,15 @@ namespace GotThatGame
 
                 request.AllowAutoRedirect = true;
                 request.Accept = "*/*";
-                
-                WebResponse response = request.GetResponse();
-                using (Stream stream = response.GetResponseStream())
+
+                using (WebResponse response = request.GetResponse())
                 {
-                    using (StreamReader reader = new StreamReader(stream))
+                    using (Stream stream = response.GetResponseStream())
                     {
-                        return reader.ReadToEnd();
+                        using (StreamReader reader = new StreamReader(stream))
+                        {
+                            return reader.ReadToEnd();
+                        }
                     }
                 }
             }
