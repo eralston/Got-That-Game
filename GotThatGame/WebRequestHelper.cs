@@ -30,7 +30,7 @@ namespace GotThatGame
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public static string GetResponseData(string url, bool xmlRequest = false)
+        public static string GetResponseData(string url)
         {
             try
             {

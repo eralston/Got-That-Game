@@ -30,7 +30,7 @@ namespace GotThatGame.Models
             string url = string.Format("http://steamcommunity.com/profiles/{0}/games/?tab=all&xml=1", steamId);
             for (int i = 0; i < 10; ++i)
             {
-                var response = WebRequestHelper.GetResponseData(url, true);
+                var response = WebRequestHelper.GetResponseData(url);
                 if (response != null)
                     return response;
                 else
