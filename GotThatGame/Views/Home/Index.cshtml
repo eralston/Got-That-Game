@@ -1,11 +1,11 @@
-@using System.Web.Optimization
+@using Combres.Mvc
 
 @{
     ViewBag.Title = "Got That Game? - A simple way to compare Steam game collections";
 }
 
 @section head {
-    <link rel="stylesheet" href="~/Content/Fonts/fontawesome.css" />
+    @Url.CombresLink("appCss")
 }
 
 @*HTML content for this page*@
@@ -77,4 +77,4 @@
         interpolate: /\{\{(.+?)\}\}/g
     };
 </script>
-@Scripts.Render("~/Scripts/steam")
+@Url.CombresLink("appJs")

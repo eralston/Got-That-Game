@@ -1,4 +1,4 @@
-@using System.Web.Optimization
+@using Combres.Mvc
 @{
     Layout = null;
 }
@@ -20,7 +20,7 @@
 
     @*CSS*@
     <link href='http://fonts.googleapis.com/css?family=Abel|Aldrich' rel='stylesheet' type='text/css' />
-    @Styles.Render("~/Content/steam")
+    @Url.CombresLink("siteCss")
     @RenderSection("head", false)
 </head>
 <body>
