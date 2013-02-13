@@ -161,8 +161,6 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="App_Data\combres.xml" />
-    <Content Include="App_Data\combres_full_with_annotation.xml" />
-    <Content Include="App_Data\combres_minimal.xml" />
     <Content Include="Content\Fonts\fontawesome-ie7.css" />
     <Content Include="Content\Fonts\fontawesome.css" />
     <Content Include="Content\Fonts\icon-reference.html" />

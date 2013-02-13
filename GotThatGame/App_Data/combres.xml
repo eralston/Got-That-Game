@@ -16,13 +16,16 @@
                 localChangeMonitorInterval="30"
                 remoteChangeMonitorInterval="60"
                 >
+    <!--Shared CSS for every page on the site-->
     <resourceSet name="siteCss" type="css">
       <resource path="~/content/site.css" />
     </resourceSet>
+    <!--CSS specific to the GTG app-->
     <resourceSet name="appCss" type="css">
       <resource path="~/content/steam.css" />
       <resource path="~/content/Fonts/fontawesome.css" />
     </resourceSet>
+    <!--Js specific to the GTG app-->
     <resourceSet name="appJs" type="js">
       <resource path="~/scripts/jquery.tinysort.js" />
       <resource path="~/scripts/Steam.js" />
