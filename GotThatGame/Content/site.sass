@@ -1,0 +1,158 @@
+/*
+ ** Site-wide styles shared across all pages
+ ** Copyright 2013, Erik Ralston
+
+/* http://meyerweb.com/eric/tools/css/reset/ 
+ * v2.0 | 20110126
+ * License: none (public domain)
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video
+  margin: 0
+  padding: 0
+  border: 0
+  font-size: 100%
+  font: inherit
+  vertical-align: baseline
+
+/* HTML5 display-role reset for older browsers
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section
+  display: block
+
+body
+  line-height: 1
+
+ol, ul
+  list-style: none
+
+blockquote, q
+  quotes: none
+
+blockquote
+  &:before, &:after
+    content: ''
+    content: none
+
+q
+  &:before, &:after
+    content: ''
+    content: none
+
+table
+  border-collapse: collapse
+  border-spacing: 0
+
+/* Typography
+
+body
+  font-family: "Abel", "arial", sans-serif
+  font-size: 16px
+
+section, footer
+  margin-top: 1em
+
+h1
+  font-size: 2em
+  margin-top: 1.5em
+
+h2
+  font-size: 1.5em
+  margin-top: 1.5em
+
+h3
+  font-size: 1.25em
+  margin-top: 1.5em
+
+h4
+  font-size: 1.1em
+  margin-top: 1.5em
+
+p
+  margin-top: 1em
+  line-height: 1.5em
+
+h1, h2, h3, h4, h5, .logo
+  font-family: "Aldrich", "arial", sans-serif
+
+/* Grid
+
+.col-half
+  width: 50%
+  float: left
+
+.col-third
+  width: 33%
+  float: left
+
+header, footer, section
+  width: 960px
+  margin-left: auto
+  margin-right: auto
+  clear: both
+
+/* Visual Flair
+
+ol, ul
+  list-style: none
+
+li
+  margin: 0.5em 0
+
+body
+  color: #f3f3f8
+  background-color: #121214
+
+.header-blanket
+  position: absolute
+  left: 0
+  right: 0
+  background-color: #232326
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#262626), to(#121214))
+  background: -moz-linear-gradient(top, #262626 0%, #121214 100%)
+  height: 150px
+  z-index: -1
+
+a
+  color: #78a633
+  text-decoration: none
+  &:visited
+    color: #40581b
+  &:hover
+    color: #5c7f27
+    text-decoration: dotted
+
+.header-wrapper
+  background-image: url("/Content/Images/txture.png")
+  background-color: black
+  border-bottom: 2px solid #8b8c8c
+
+header, .header-wrapper
+  height: 4em
+  padding-top: 0.5em
+  color: #f3f3f8
+
+footer
+  color: #8b8c8c
+  .two-way
+    border-left: 2px solid #262626
+    border-right: 2px solid #262626
+    border-radius: 1em
+    box-shadow-left: 0 0 1em #262626
+    box-shadow-right: 0 0 1em #262626
+  h2
+    margin-top: 0.5em
+    margin-bottom: 0.5em
+
+.logo
+  color: #f3f3f8 !important
+  font-size: 2em
+  height: 3em
+  text-decoration: none
+  text-shadow: 1px 1px 0 #f3f3f8, 2px 2px 0 #f3f3f8, 3px 3px 0 #8b8c8c, 4px 4px 0 #8b8c8c, 5px 5px 0 #8b8c8c, 6px 6px 0 #8b8c8c
+
+.unseen
+  position: absolute
+  top: -9999em
+
+.clear
+  clear: both

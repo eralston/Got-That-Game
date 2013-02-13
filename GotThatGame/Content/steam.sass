@@ -1,0 +1,152 @@
+/*
+ ** Styles specific to the interactive Steam UI
+ ** Copyright 2013, Erik Ralston
+
+/* Friends area
+
+.friend-list
+  padding-right: 2em
+  margin-top: 1em
+  a
+    text-decoration: none
+
+.friend-list-item
+  border-top: 1px solid #7b7b89
+  position: relative
+  cursor: pointer
+  height: 2em
+  &.selected
+    background-image: url("/Content/Images/txture.png")
+  &:hover
+    background-color: #494951
+    background-image: url("/Content/Images/txture.png")
+  .friend-name
+    position: absolute
+    left: 3em
+    top: 0.5em
+
+/* Games Area
+
+.game-list
+  margin-top: 1em
+  border-bottom: 1px solid #7b7b89
+
+.game-list-item
+  border-top: 1px solid #7b7b89
+  position: relative
+  height: 3em
+  .game-name
+    position: absolute
+    left: 9em
+    top: 1em
+  .game-count
+    position: absolute
+    right: 1em
+    top: 1em
+
+.game-list
+  a
+    text-decoration: none
+  .thumbnail
+    width: 8em
+
+.current-player-games .game-count
+  display: none
+
+/* Utility areas for AJAX
+
+.loading-player-wrapper
+  width: 50%
+  margin-left: auto
+  margin-right: auto
+
+.current-player-wrapper
+  position: relative
+  margin: 1em auto
+  .current-player-name
+    position: absolute
+    left: 3em
+    top: 1em
+    text-decoration: none
+    font-size: 1.5em
+
+/* Icons for friends
+
+.friend-refresh
+  display: none !important
+  position: absolute
+  right: 2.5em
+  top: 0.5em
+
+.friends-list-item.selected .friend-refresh
+  display: block !important
+
+.friend-list-item
+  &:hover .friend-refresh
+    display: block !important
+  .friend-add
+    display: none
+    position: absolute
+    right: 1em
+    top: 0.5em
+  &:hover .friend-add
+    display: block !important
+
+.selected.friend-list-item:hover .friend-add
+  display: none !important
+
+.friend-added
+  display: none !important
+  position: absolute
+  right: 1em
+  top: 0.5em
+
+.selected .friend-added
+  display: block !important
+
+.friend-list-item
+  .friend-loading
+    display: none !important
+    position: absolute
+    right: 2.5em
+    top: 0.5em
+  &.loading
+    .friend-loading
+      display: block !important
+    .friend-refresh
+      display: none !important
+
+/* Steam button
+@-webkit-keyframes logo-glow
+  from
+    box-shadow: 0 0 50px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6)
+  to
+    box-shadow: 0 0 20px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6)
+
+
+@-webkit-keyframes logo-glow-big
+  from
+    box-shadow: 0 0 80px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6)
+  to
+    box-shadow: 0 0 30px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6)
+
+
+.steam-login-button
+  -webkit-animation: logo-glow 1s ease-in-out infinite alternate
+  background-image: url("/Content/Images/sits_large_border.png")
+  border-radius: 7px
+  box-shadow: 0 0 100px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6)
+  cursor: pointer
+  height: 51px
+  margin: 50px auto
+  width: 118px
+
+#username
+  margin: 1em 1em
+  font-size: 2em
+  border-radius: 0.25em
+  border: 2px solid gray
+  font-family: 'Abel'
+  padding: 0.1em 0.2em
+  &[value=""]
+    -webkit-animation: logo-glow 1s ease-in-out infinite alternate
