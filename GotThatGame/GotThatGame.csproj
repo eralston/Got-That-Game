@@ -251,10 +251,12 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>sass "$(ProjectDir)Content\site.sass" "$(ProjectDir)Content\site.css"
+    <PostBuildEvent>if $(ConfigurationName) == Debug {
+sass "$(ProjectDir)Content\site.sass" "$(ProjectDir)Content\site.css"
 sass "$(ProjectDir)Content\steam.sass" "$(ProjectDir)Content\steam.css"
 
-sass "$(ProjectDir)Content\Font\*.sass" "$(ProjectDir)Content\Font\*.css"</PostBuildEvent>
+sass "$(ProjectDir)Content\Font\*.sass" "$(ProjectDir)Content\Font\*.css"
+}</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
