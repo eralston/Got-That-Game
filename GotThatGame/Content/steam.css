@@ -21,7 +21,7 @@
     height: 2em;
 }
 
-    .friend-list-item.selected {
+    .selected .friend-list-item {
         background-image: url("/Content/Images/txture.png");
     }
 
@@ -103,7 +103,7 @@
     top: 0.5em;
 }
 
-.friends-list-item.selected .friend-refresh, .friend-list-item:hover .friend-refresh {
+.selected .friends-list-item  .friend-refresh, .friend-list-item:hover .friend-refresh {
     display: block !important;
 }
 
@@ -118,7 +118,7 @@
     display: block !important;
 }
 
-.selected.friend-list-item:hover .friend-add {
+.selected .friend-list-item:hover .friend-add {
     display: none !important;
 }
 
