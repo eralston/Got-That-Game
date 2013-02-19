@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2012 for Web
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GotThatGame", "GotThatGame\GotThatGame.csproj", "{FF50B9C3-BB74-4A38-B004-77D5457A70B8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GotThatGame.Test", "GotThatGame.Test\GotThatGame.Test.csproj", "{B5CD8FE2-A663-4AD0-9538-3B336852E2C7}"

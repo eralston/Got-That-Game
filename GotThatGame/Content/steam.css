@@ -22,7 +22,7 @@
 }
 
     .friend-list-item.selected {
-        background-image: url("/Content/Images/txture.png"); 
+        background-image: url("/Content/Images/txture.png");
     }
 
     .friend-list-item:hover {
@@ -42,7 +42,6 @@
 
 .game-list {
     margin-top: 1em;
-    border-bottom: 1px solid #7B7B89;
 }
 
 .game-list-item {

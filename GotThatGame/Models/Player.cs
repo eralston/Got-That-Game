@@ -114,6 +114,9 @@ namespace GotThatGame.Models
         [DataMember(Name = "avatarmedium")]
         public string AvatarLarge { get; set; }
 
+        [DataMember]
+        public string FriendlyName { get; set; }
+
         #endregion
 
         #region Properties Pulled from Other Web Services

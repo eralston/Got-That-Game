@@ -219,10 +219,6 @@
     <Content Include="Content\Fonts\fontawesome.sass" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\site.sass" />
-    <Content Include="Content\steam.sass" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Properties\PublishProfiles\GotThatGame-Beta - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\GotThatGame-Beta - Web Deploy.pubxml" />
   </ItemGroup>
@@ -255,12 +251,8 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>if $(ConfigurationName) == Debug {
-sass "$(ProjectDir)Content\site.sass" "$(ProjectDir)Content\site.css"
-sass "$(ProjectDir)Content\steam.sass" "$(ProjectDir)Content\steam.css"
-
-sass "$(ProjectDir)Content\Font\*.sass" "$(ProjectDir)Content\Font\*.css"
-}</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

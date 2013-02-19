@@ -41,6 +41,7 @@ namespace GotThatGame.Controllers
         public JsonResult PlayerByFriendlyName(string id)
         {
             Player currentPlayer = Player.GetPlayerByFriendlyName(id);
+            currentPlayer.FriendlyName = id;
             return Json(currentPlayer, JsonRequestBehavior.AllowGet);
         }
 

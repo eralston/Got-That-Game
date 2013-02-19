@@ -22,7 +22,7 @@
 </section>
 <section id="currentPlayerInfo">
 </section>
-<section class="main-app-window" style="display: none">
+<section class="main-app-window" style="display:none">
     <div class="col-half">
         <h2>Friends</h2>
         <div id="_friendList" class="friend-list">
@@ -36,6 +36,8 @@
 </section>
 
 @*HTML Templates used by Steam.js*@
+
+@*Current Player*@
 <script id="_currentPlayerProfileLoadingTemplate" type="text/html">
     <div class="loading-player-wrapper">
         <span>Searching for Steam user {{Name}}...</span>
@@ -50,6 +52,21 @@
         <i class="icon-refresh"></i>
     </div>
 </script>
+
+@*Friends *@
+<script id="_friendsLoadingTemplate" type="text/html">
+    <div>
+        <i class="icon-loading icon-spinner"></i>
+        Friends Loading...
+    </div>
+</script>
+<script id="_friendsLoadFailedTemplate" type="text/html">
+    <div>
+        Friend Load Failed<br />
+        <i class="icon-refresh refresh-friends"></i>
+        Try Again
+    </div>
+</script>
 <script id="_friendItemTemplate" type="text/html">
     <div class="friend-list-item" data-id="{{SteamId}}">
         <img src="{{AvatarSmall}}" alt="{{Name}}" class="thumbnail" />
@@ -58,6 +75,21 @@
         <div class="friend-loading icon-spinner"></div>
         <div class="friend-add icon-plus-sign"></div>
         <div class="friend-added icon-ok-sign"></div>
+    </div>
+</script>
+
+@*Games*@
+<script id="_gamesLoadingTemplate" type="text/html">
+    <div>
+        <i class="icon-loading icon-spinner"></i>
+        Games Loading...
+    </div>
+</script>
+<script id="_gamesLoadFailedTemplate" type="text/html">
+    <div>
+        Game Collection Load Failed<br />
+        <i class="icon-refresh refresh-games"></i>
+        Try Again
     </div>
 </script>
 <script id="_gameItemTemplate" type="text/html">
