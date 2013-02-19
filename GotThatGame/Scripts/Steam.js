@@ -69,7 +69,7 @@ var PlayerCache = function () {
             friendlyNameToSteamId[player.FriendlyName] = player.SteamId;
 
         if (localStorage) {
-            localStorage.setItem("steamIdForFriendlyName" + player.SteamId, player.FriendlyName);
+            localStorage.setItem("steamIdForFriendlyName" + player.FriendlyName, player.SteamId);
             localStorage.setItem("player" + player.SteamId, JSON.stringify(player));
         }
     };
@@ -115,184 +115,6 @@ var PlayerCache = function () {
 
 window.playerCache = new PlayerCache();
 
-///
-/// Constructor for a Steam object that proxies to the SteamController class
-///
-function Steam(errorCallback) {
-
-    var playerCache = {};
-
-
-    // PLAYER CACHE
-
-    ///
-    /// Sets the cache to store the given player under the given key
-    ///
-    var setPlayerCache = function (key, player) {
-        playerCache[key] = player;
-        // try from localstorage
-        if (localStorage)
-            localStorage.setItem("player" + key, JSON.stringify(player));
-    };
-
-    ///
-    /// Tries to retrieve the given player from the cache
-    ///
-    this.getFromPlayerCache = function (key) {
-        var val = playerCache[key];
-        if (val != undefined)
-            return val;
-
-        // try from localstorage
-        if (localStorage != undefined) {
-            // pull it from localStorage and also push it through to the player cache object
-            var cachedVal = localStorage["player" + key];
-            if (cachedVal) {
-                try {
-                    return playerCache[key] = JSON.parse(cachedVal);
-                }
-                catch (err) {
-                    localStorage[key] = undefined;
-                }
-            }
-        }
-
-        return undefined;
-    };
-
-    var getFromPlayerCache = this.getFromPlayerCache;
-
-    ///
-    /// Returns true if the given player is in the cache; otherwise returns false
-    ///
-    this.isPlayerInCache = function (key) {
-        var val = playerCache[key];
-        if (val != undefined)
-            return true;
-
-        // try from localstorage
-        if (localStorage != undefined) {
-            return localStorage["player" + key] != undefined;
-        }
-
-        return false;
-    };
-
-    var isPlayerInCache = this.isPlayerInCache;
-
-    ///
-    /// Returns true if the given player is in the cache with values fully loaded; otherwise, returns false
-    ///
-    this.isPlayerInCacheWithGameData = function (key) {
-        var player = getFromPlayerCache(key);
-        if (player == undefined)
-            return false;
-        return player.Games != undefined;
-    }
-
-    // load player cache on creation if we have localStorage
-    if (localStorage) {
-        for (var i = 0; i < localStorage.length; ++i) {
-            var key = localStorage.key(i);
-            if (key.indexOf("player") == 0) {
-                try {
-                    var item = JSON.parse(localStorage[key]);
-                    if (item) {
-                        item.GamesHash = createGameHash(item.Games);
-                    }
-                }
-                catch (err) {
-                    localStorage[key] = undefined;
-                }
-            }
-        }
-    }
-
-    // CURRENT PLAYER (Player + Friends)
-
-    ///
-    /// Loads a current player object over AJAX, calling via friendly name (AKA vanity URL)
-    ///
-    this.getCurrentPlayerByFriendlyName = function (friendlyName, callback) {
-
-        // check the cache and return from there if we have it
-        var player = getFromPlayerCache(friendlyName);
-        if (player != undefined) {
-            callback(player);
-            return;
-        }
-
-        /// try from AJAX
-        $.get("/Steam/CurrentUserPlayerByFriendlyName/" + friendlyName,
-            function (player, textStatus, jqXHR) {
-
-                // form cache of games
-                player.GamesHash = createGameHash(player.Games);
-
-                // cache by both friendlyName and 
-                setPlayerCache(friendlyName, player);
-                setPlayerCache(player.SteamId, player);
-
-                // if he brought friends, then also load them into the cache
-                if (player.Friends != undefined) {
-                    for (i in player.Friends) {
-                        var friend = player.Friends[i];
-                        setPlayerCache(friend.SteamId, friend);
-                    }
-                }
-
-                callback(player);
-            });
-    };
-
-    ///
-    /// Loads a current player object over AJAX, calling via steam ID
-    ///
-    this.getCurrentPlayerBySteamId = function (steamId, callback) {
-
-        // check the cache and return from there if we have it
-        var val = getFromPlayerCache(steamId);
-        if (val != undefined) {
-            callback(val);
-            return;
-        }
-
-        $.get("/Steam/CurrentUserPlayerByFriendlyName/" + steamId,
-            function (player, textStatus, jqXHR) {
-                setPlayerCache(steamId, player);
-                callback(player);
-            });
-    };
-
-    // GAMES
-
-    ///
-    /// Loads a player's game collection via AJAX
-    ///
-    this.getPlayerGamesBySteamId = function (steamId, callback) {
-
-        // check the cache and return from there if we have it
-        var val = getFromPlayerCache(steamId);
-        if (val != undefined) {
-            if (val.Games != undefined) {
-                callback(val);
-                return;
-            }
-        }
-
-        // AJAX the game list
-        $.get("/Steam/GamesBySteamId/" + steamId,
-            function (games, textStatus, jqXHR) {
-                var player = getFromPlayerCache(steamId);
-                player.Games = games;
-                player.GamesHash = createGameHash(games);
-                setPlayerCache(player.SteamId, player);
-                callback(player);
-            });
-
-    };
-};
-
 // Model for players, including friends and games
 var Player = Backbone.Model.extend({
 
@@ -305,13 +127,14 @@ var Player = Backbone.Model.extend({
     },
 
     getPlayer: function () {
-        return this.get("player");
+        var steamId = this.get("steamId");
+        return window.playerCache.getPlayerBySteamId(steamId);
     },
 
     setPlayer: function (player) {
         player.DateLoaded = new Date();
         this.cachePlayer(player);
-        this.set({ player: player });
+        this.set({ steamId: player.SteamId });
     },
 
     // Loading Header
@@ -366,7 +189,7 @@ var Player = Backbone.Model.extend({
 
     loadGames: function (force) {
         var thisModel = this;
-        var player = thisModel.get("player");
+        var player = thisModel.getPlayer();
 
         if (force == undefined || !force) {
             if (player.Games != undefined && player.Games != null) {
@@ -379,7 +202,7 @@ var Player = Backbone.Model.extend({
 
         $.get("/Steam/GamesBySteamId/" + player.SteamId, function (games, textStatus, jqXHR) {
 
-            var player = thisModel.get("player");
+            var player = thisModel.getPlayer();
 
             player.Games = games;
             player.GamesHash = window.gameHasher.createGameHash(games);
@@ -396,7 +219,7 @@ var Player = Backbone.Model.extend({
 
     loadFriends: function (force) {
         var thisModel = this;
-        var player = thisModel.get("player");
+        var player = thisModel.getPlayer();
 
         // if we aren't forced and we already have friends, just offer those up
         if (force != undefined || !force) {
@@ -408,7 +231,7 @@ var Player = Backbone.Model.extend({
 
         this.trigger("friends-loading");
         $.get("/Steam/FriendsBySteamId/" + player.SteamId, function (friends, textStatus, jqXHR) {
-            var player = thisModel.get("player");
+            var player = thisModel.getPlayer();
 
             for (i in friends) {
                 var friend = friends[i];
@@ -590,7 +413,7 @@ var FriendsView = Backbone.View.extend({
     },
 
     render: function () {
-        var player = this.model.get("player");
+        var player = this.model.getPlayer();
 
         if (player.Friends == undefined || player.Friends == null) {
             this.$el.html(this.loadingTemplate());
@@ -630,7 +453,7 @@ var GamesView = Backbone.View.extend({
     },
 
     render: function () {
-        var player = this.model.get("player");
+        var player = this.model.getPlayer();
 
         if (player.Games == undefined || player.Games == null) {
             this.$el.html(this.loadingTemplate());
@@ -668,29 +491,61 @@ var CurrentPlayerView = Backbone.View.extend({
 
     template: _.template($("#_currentPlayerProfileTemplate").html()),
 
+    loadCurrentPlayerGameColletion: function () {
+
+        window.gameView = new GamesView({ model: this.model });
+        $("#_gameList").append(window.gameView.$el);
+
+        this.model.loadGames();
+    },
+
+    loadCurrentPlayerFriends: function() {
+        if (window.friendsView != undefined && window.friendsView != null)
+            window.friendsView.remove();
+
+        window.friendsView = new FriendsView({ model: this.model });
+        $("#_friendList").append(window.friendsView.$el);
+        this.model.loadFriends();
+    },
+
+    loadCurrentPlayerComparison: function (selectedElements) {
+
+        var comparisonModel = new ComparisonModel();
+
+        selectedElements.each(function () {
+            var steamId = $(this).attr("data-id");
+            
+        });
+
+        window.gameView = new GamesView({ model: this.model });
+        $("#_gameList").append(window.gameView.$el);
+    },
+
+    loadGameView: function () {
+        
+        if (window.gameView != undefined && window.gameView != null)
+            window.gameView.remove();
+
+        var selectedElements = $(".friend-list .selected");
+
+        // if we have no friends, then just show our collection
+        if (selectedElements.length == 0)
+            this.loadCurrentPlayerGameColletion(selectedElements);
+        else
+            this.loadCurrentPlayerGameColletion();
+    },
+
     render: function () {
-        var playerModel = this.model.get("player");
+        var playerModel = this.model.getPlayer();
         if (playerModel != undefined) {
             var html = this.template(playerModel);
             this.$el.html(html);
 
             $(".main-app-window").fadeIn(500);
 
-            // load friends
-            if (window.friendsView != undefined && window.friendsView != null)
-                window.friendsView.remove();
+            this.loadCurrentPlayerFriends();
 
-            window.friendsView = new FriendsView({ model: this.model });
-            $("#_friendList").append(window.friendsView.$el);
-            this.model.loadFriends();
-
-            if (window.gamesView != undefined && window.gamesView != null)
-                window.gamesView.remove();
-
-            window.gamesView = new GamesView({ model: this.model })
-            $("#_gameList").append(window.gamesView.$el);
-
-            this.model.loadGames();
+            this.loadGameView();
         }
     }
 });
@@ -707,7 +562,7 @@ var ComparisonView = Backbone.View.extend({
     template: _.template($("#_currentPlayerProfileTemplate").html()),
 
     render: function () {
-        var playerModel = this.model.get("player");
+        var playerModel = this.model.getPlayer();
         if (playerModel != undefined) {
 
         }
@@ -715,7 +570,6 @@ var ComparisonView = Backbone.View.extend({
 });
 
 // instance the steam object
-window.steam = new Steam();
 
 window.currentPlayerSteamId = null;
 window.currentPlayer = null;
@@ -766,7 +620,7 @@ function loadGames(games, displayAll) {
 /// Loads the current player's game collection
 ///
 function loadCurrentPlayerGames() {
-    loadGames(currentPlayer.Games, true);
+    
 }
 
 ///
