@@ -228,7 +228,7 @@ ul.icons li [class*=" icon-"] {
 .btn.btn-large [class*=" icon-"].pull-right.icon-2x {
   margin-left: .2em;
 }
-.icon-spinner {
+.icon-spin {
   display: inline-block;
   -moz-animation: spin 2s infinite linear;
   -o-animation: spin 2s infinite linear;
@@ -271,4 +271,5 @@ ul.icons li [class*=" icon-"] {
 }.icon-refresh:before		{ content: "\f021"; }
 .icon-plus-sign:before		{ content: "\f022"; }
 .icon-ok-sign:before		{ content: "\f023"; }
-.icon-spinner:before		{ content: "\f024"; }
+.icon-warning-sign:before		{ content: "\f024"; }
+.icon-spinner:before		{ content: "\f025"; }

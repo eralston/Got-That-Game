@@ -22,7 +22,7 @@
 </section>
 <section id="currentPlayerInfo">
 </section>
-<section class="main-app-window" style="display:none">
+<section class="main-app-window" style="display: none">
     <div class="col-half">
         <h2>Friends</h2>
         <div id="_friendList" class="friend-list">
@@ -31,6 +31,8 @@
     <div class="col-half">
         <h2>Games</h2>
         <div id="_gameList" class="game-list">
+        </div>
+        <div id="_comparison">
         </div>
     </div>
 </section>
@@ -71,8 +73,9 @@
     <div class="friend-list-item" data-id="{{SteamId}}">
         <img src="{{AvatarSmall}}" alt="{{Name}}" class="thumbnail" />
         <span class="friend-name"><a href="{{ProfileUrl}}" target="_blank">{{Name}}</a></span>
+        <div class="friend-error icon-warning-sign"></div>
         <div class="friend-refresh icon-refresh refresh"></div>
-        <div class="friend-loading icon-spinner"></div>
+        <div class="friend-loading icon-spin icon-spinner"></div>
         <div class="friend-add icon-plus-sign"></div>
         <div class="friend-added icon-ok-sign"></div>
     </div>
@@ -101,6 +104,15 @@
     </div>
 </script>
 
+@*Comparison*@
+<script id="_comparisonFailedTemplate" type="text/html">
+    <div>
+        Comparison Load Failed<br />
+        <i class="icon-refresh refresh-games"></i>
+        Try Again
+    </div>
+</script>
+
 @*Script files for this page*@
 @section bodyBottom {
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js" type="text/javascript"></script>
@@ -111,5 +123,7 @@
             interpolate: /\{\{(.+?)\}\}/g
         };
     </script>
-    @Url.CombresLink("appJs")
+    @* @Url.CombresLink("appJs")*@
+    <script src="~/Scripts/jquery.tinysort.min.js"></script>
+    <script src="~/Scripts/Steam.js"></script>
 }

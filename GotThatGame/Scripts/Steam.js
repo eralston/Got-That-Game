@@ -1,10 +1,4 @@
 ﻿
-// Global variables for page element templates
-var playerProfileTemplate = null;
-var playerProfileLoadingTemplate = null;
-var friendItemTemplate = null;
-var gameItemTemplate = null;
-
 // For storing a universal cache of game objects, then outputting their info for comparison purposes
 var GameHasher = function () {
     var allGames = {};
@@ -119,11 +113,16 @@ window.playerCache = new PlayerCache();
 var Player = Backbone.Model.extend({
 
     initialize: function () {
-        _.bindAll(this, "getPlayer", "setPlayer", "cachePlayer", "loadByFriendlyName", "loadBySteamId", "loadDone", "loadGames", "loadFriends");
+        _.bindAll(this);
+        this.setSelected(false);
     },
 
     cachePlayer: function (player) {
         window.playerCache.cachePlayer(player);
+    },
+
+    setSelected: function (selected) {
+        this.set({ selected: selected });
     },
 
     getPlayer: function () {
@@ -136,6 +135,38 @@ var Player = Backbone.Model.extend({
         this.id = player.SteamId;
         this.cachePlayer(player);
         this.set({ steamId: player.SteamId });
+    },
+
+    getFriends: function () {
+        return this.get("Friends");
+    },
+
+    setFriends: function (friendHeaders) {
+        if (friendHeaders == undefined || friendHeaders == null)
+            return;
+
+        var player = this.getPlayer();
+        player.Friends = friendHeaders;
+        this.setPlayer(player);
+
+        var FriendCollection = Backbone.Collection.extend({ model: Player });
+        var friends = new FriendCollection();
+
+        // iterate over the friends collection
+        for (i in friendHeaders) {
+
+            // pull out the friend and cache the data
+            var friend = friendHeaders[i];
+            window.playerCache.cachePlayer(friend);
+
+            // wrap it in a model and add it to this collection
+            var friendModel = new Player();
+            friendModel.loadByPlayerHeader(friend);
+            friends.add(friendModel);
+
+        }
+
+        this.set({ Friends: friends });
     },
 
     // Loading Header
@@ -151,6 +182,7 @@ var Player = Backbone.Model.extend({
             var player = window.playerCache.getPlayerByFriendlyName(friendlyName);
             if (player) {
                 this.setPlayer(player);
+                this.setFriends(player.Friends);
                 this.trigger("header-loaded");
                 return;
             }
@@ -158,7 +190,10 @@ var Player = Backbone.Model.extend({
 
         // if we can't, then fall back to web services
         this.trigger("header-loading");
-        $.get("/Steam/PlayerByFriendlyName/" + friendlyName, this.loadDone);
+        $.get("/Steam/PlayerByFriendlyName/" + friendlyName, this.loadDone)
+            .fail(function () {
+                this.trigger("header-load-failed");
+            });
     },
     loadBySteamId: function (steamId, force) {
 
@@ -167,6 +202,7 @@ var Player = Backbone.Model.extend({
             var player = window.playerCache.getPlayerBySteamId(steamId);
             if (player) {
                 this.setPlayer(player);
+                this.setFriends(player.Friends);
                 this.trigger("header-loaded");
                 return;
             }
@@ -174,7 +210,10 @@ var Player = Backbone.Model.extend({
 
         // if we can't, then fall back to web services
         this.trigger("header-loading");
-        $.get("/Steam/PlayerBySteamId/" + steamId, loadDone);
+        $.get("/Steam/PlayerBySteamId/" + steamId, loadDone)
+            .fail(function () {
+                this.trigger("header-load-failed");
+            });
     },
 
     loadDone: function (player, textStatus, jqXHR) {
@@ -233,14 +272,7 @@ var Player = Backbone.Model.extend({
         this.trigger("friends-loading");
         $.get("/Steam/FriendsBySteamId/" + player.SteamId, function (friends, textStatus, jqXHR) {
             var player = thisModel.getPlayer();
-
-            for (i in friends) {
-                var friend = friends[i];
-                window.playerCache.cachePlayer(friend);
-            }
-
-            player.Friends = friends;
-            thisModel.setPlayer(player);
+            thisModel.setFriends(friends);
 
             thisModel.trigger("friends-loaded");
         }).fail(function () {
@@ -249,47 +281,44 @@ var Player = Backbone.Model.extend({
     }
 });
 
-// Collection for holding friends of the current player
-var FriendCollection = Backbone.Collection.extend({
-
-    model: Player,
-
-    addFriends: function (friends) {
-        for (i in friends) {
-            var friend = friends[i];
-            // wrap it up in a model and add it to the collection
-            var model = new Player();
-            model.loadByPlayerHeader(friend);
-            this.add(model);
-        }
-    }
-});
-
 // model for comparing game collections between sets of players
 var ComparisonModel = Backbone.Model.extend({
 
     initialize: function () {
-        _.bindAll(this, "addPlayer", "compare", "playerLoaded");
+        _.bindAll(this);
         this.set({ players: {} });
     },
 
-    // adds a player to the comparison
-    addPlayer: function (playerModel) {
+    setPlayer: function (player) {
+        var friends = player.getFriends();
+        friends.on("change:selected", this.compare);
+        // friends.on("games-loaded", this.playerLoaded);
+        this.set({ player: player });
+    },
 
-        playerModel.on("games-loaded", playerLoaded);
+    getPlayer: function () {
+        return this.get("player");
+    },
 
-        // update the list of players
-        var players = this.get("players");
-        players[steamId] = player;
-        this.set({ players: players });
+    getComparisonFriends: function () {
+        var player = this.getPlayer();
+        return player.getFriends().where({ selected: true });
     },
 
     // starts the comparison, async completing on the "comparison-complete" event
-    compare: function () {
-        this.trigger("comparison-started");
-        var players = this.get("players");
-        for (i in players)
-            players[i].loadGames();
+    compare: function (a, b, c) {
+
+        var selectedFriends = this.getComparisonFriends();
+
+        if (selectedFriends.length == 0) {
+
+        } else {
+
+            this.trigger("comparison-started");
+
+            for (i in selectedFriends)
+                selectedFriends[i].loadGames();
+        }
     },
 
     areAllPlayersLoaded: function () {
@@ -346,8 +375,31 @@ var ComparisonModel = Backbone.Model.extend({
         }
 
         // set the result of the accumulation
-        this.games = steam.getGamesWithCounts(comparisonHash, friendSteamIds.length + 1);
+        var games = steam.getGamesWithCounts(comparisonHash, friendSteamIds.length + 1);
+        this.set({ games: games });
         this.trigger("comparison-complete");
+    }
+});
+
+var CurrentPlayer = Backbone.Model.extend({
+
+    initialize: function () {
+        _.bindAll(this);
+    },
+
+    getCurrentPlayer: function () {
+        return this.get("CurrentPlayer");
+    },
+
+    loadFromFriendlyName: function (friendlyName) {
+        var player = new Player();
+        player.loadByFriendlyName(friendlyName);
+    },
+
+    refreshFriends: function () {
+    },
+
+    compareSelectedFriends: function () {
     }
 });
 
@@ -363,27 +415,33 @@ var ComparisonView = Backbone.View.extend({
     },
 
     initialize: function () {
-        _.bindAll(this, "render", "renderFail");
-        this.listenTo(this.model, "comparison-started", this.render);
-        this.listenTo(this.model, "comparison-continues", this.render);
+        _.bindAll(this);
+        this.listenTo(this.model, "comparison-started", this.renderLoading);
+        this.listenTo(this.model, "comparison-continues", this.renderLoading);
         this.listenTo(this.model, "comparison-complete", this.renderFail);
-
-        this.render();
     },
 
     template: _.template($("#_gameItemTemplate").html()),
-    loadingTemplate: _.template($("#_gamesLoadingTemplate").html()),
-    failTemplate: _.template($("#_gamesLoadFailedTemplate").html()),
+    loadingTemplate: _.template($("#_friendItemTemplate").html()),
+    failTemplate: _.template($("#_comparisonFailedTemplate").html()),
 
     refresh: function () {
         this.model.compare();
     },
 
-    render: function () {
-        var comparison = this.model;
+    renderLoading: function () {
+
+        var friends = this.model.getComparisonFriends();
+        var html = "";
+        for (i in friends) {
+            html = this.loadingTemplate(friends.getPlayer());
+        }
+        this.$el.html(html);
     },
+
     renderFail: function () {
-        this.$el.html(this.failTemplate());
+
+        this.$el.html(this.failTemplate())
     }
 });
 
@@ -395,6 +453,12 @@ var FriendView = Backbone.View.extend({
     },
 
     initialize: function () {
+        _.bindAll(this);
+
+        this.listenTo(this.model, "games-loading", this.showProgress);
+        this.listenTo(this.model, "games-loaded", this.hideProgress);
+        this.listenTo(this.model, "games-load-failed", this.showError);
+
         this.render();
     },
 
@@ -406,6 +470,23 @@ var FriendView = Backbone.View.extend({
 
     template: _.template($("#_friendItemTemplate").html()),
 
+    showProgress: function() {
+        this.$el.find(".friend-list-item").addClass("loading");
+    },
+
+    hideProgress: function () {
+        this.$el.find(".friend-list-item").removeClass("loading");
+    },
+
+    showError: function() {
+        this.hideProgress();
+        this.$el.find(".friend-list-item").addClass("error");
+    },
+
+    hideError:function() {
+        this.$el.find(".friend-list-item").removeClass("error");
+    },
+
     render: function () {
         this.$el.html(this.template(this.model.getPlayer()));
     },
@@ -414,12 +495,8 @@ var FriendView = Backbone.View.extend({
 
     toggle: function () {
         var $this = this.$el;
-        if ($this.hasClass("selected")) {
-            $this.removeClass("selected");
-        } else {
-            $this.addClass("selected");
-
-        }
+        $this.toggleClass("selected");
+        this.model.setSelected($this.hasClass("selected"));
     }
 });
 
@@ -431,41 +508,28 @@ var FriendsView = Backbone.View.extend({
     },
 
     initialize: function () {
-        _.bindAll(this, "render", "renderFail");
+        _.bindAll(this);
 
-        this.listenTo(this.model, "friends-loading", this.render);
-        this.listenTo(this.model, "friends-loaded", this.render);
+        this.listenTo(this.model, "friends-loading", this.renderLoading);
+        this.listenTo(this.model, "friends-loaded", this.renderFriends);
         this.listenTo(this.model, "friends-load-failed", this.renderFail);
     },
 
+    template: _.template($("#_friendItemTemplate").html()),
     loadingTemplate: _.template($("#_friendsLoadingTemplate").html()),
     failTemplate: _.template($("#_friendsLoadFailedTemplate").html()),
 
-    render: function () {
-        var player = this.model.getPlayer();
-        var $root = this.$el;
-
-        // show loader if we don't have friends
-        if (player.Friends == undefined || player.Friends == null) {
-            this.$el.html(this.loadingTemplate());
-        } else {
-            var friends = player.Friends;
-            var friendsCollection = new FriendCollection();
-
-            friendsCollection.on("add", function (model) {
-                // add a friend view
-                var friendView = new FriendView({ model: model });
-                $root.append(friendView.el);
-                model.view = friendView;
-            });
-
-            friendsCollection.on("remove", function (a, b, c) {
-                // remove a friend view
-                model.View.remove();
-            });
-
-            friendsCollection.addFriends(friends);
-        }
+    renderLoading: function () {
+        this.$el.html(this.loadingTemplate());
+    },
+    renderFriends: function () {
+        var friendCollection = this.model.getFriends();
+        var friendsView = this;
+        friendsView.$el.children().remove();
+        friendCollection.each(function (friend) {
+            var view = new FriendView({ model: friend });
+            friendsView.$el.append(view.$el);
+        });
     },
     renderFail: function () {
         this.$el.html(this.failTemplate());
@@ -478,7 +542,7 @@ var GamesView = Backbone.View.extend({
     },
 
     initialize: function () {
-        _.bindAll(this, "render", "renderFail");
+        _.bindAll(this);
         this.listenTo(this.model, "games-loading", this.render);
         this.listenTo(this.model, "games-loaded", this.render);
         this.listenTo(this.model, "games-load-failed", this.renderFail);
@@ -529,11 +593,15 @@ var CurrentPlayerView = Backbone.View.extend({
     initialize: function () {
         _.bindAll(this, "render");
         this.listenTo(this.model, "header-loaded", this.render);
+        this.listenTo(this.model, "friends-loaded", this.loadCurrentPlayerComparison);
     },
 
     template: _.template($("#_currentPlayerProfileTemplate").html()),
 
     loadCurrentPlayerGameColletion: function () {
+
+        if (window.gameView != undefined && window.gameView != null)
+            window.gameView.remove();
 
         window.gameView = new GamesView({ model: this.model });
         $("#_gameList").append(window.gameView.$el);
@@ -542,6 +610,7 @@ var CurrentPlayerView = Backbone.View.extend({
     },
 
     loadCurrentPlayerFriends: function () {
+
         if (window.friendsView != undefined && window.friendsView != null)
             window.friendsView.remove();
 
@@ -550,31 +619,20 @@ var CurrentPlayerView = Backbone.View.extend({
         this.model.loadFriends();
     },
 
-    loadCurrentPlayerComparison: function (selectedElements) {
+    loadCurrentPlayerComparison: function () {
 
-        var comparisonModel = new ComparisonModel();
+        if (window.comparisonView != undefined && window.comparisonView != null)
+            window.comparisonView.remove();
 
-        selectedElements.each(function () {
-            var steamId = $(this).attr("data-id");
-
-        });
-
-        window.gameView = new GamesView({ model: this.model });
-        $("#_gameList").append(window.gameView.$el);
+        var comparison = new ComparisonModel();
+        comparison.setPlayer(this.model);
+        window.comparisonView = new ComparisonView({ model: comparison });
+        $("#_comparison").append(window.comparisonView.$el);
     },
 
     loadGameView: function () {
 
-        if (window.gameView != undefined && window.gameView != null)
-            window.gameView.remove();
-
-        var selectedElements = $(".friend-list .selected");
-
-        // if we have no friends, then just show our collection
-        if (selectedElements.length == 0)
-            this.loadCurrentPlayerGameColletion(selectedElements);
-        else
-            this.loadCurrentPlayerGameColletion();
+        this.loadCurrentPlayerGameColletion();
     },
 
     render: function () {
@@ -611,141 +669,6 @@ var ComparisonView = Backbone.View.extend({
     }
 });
 
-//// instance the steam object
-
-//window.currentPlayerSteamId = null;
-//window.currentPlayer = null;
-//window.friendSteamIds = null;
-
-/////
-///// Helper function clear the current player info container and appends the given element as a child
-/////
-//function applyElementToPlayerInfo(element) {
-
-//    $("#currentPlayerInfo")
-//            .children().remove()
-//            .end()
-//            .append(element).hide().fadeIn(500);
-//}
-
-/////
-///// Displays the given game list for the user
-/////
-//function loadGames(games, displayAll) {
-//    // setup games
-//    var gameHtml = "";
-//    for (i in games) {
-//        var game = games[i];
-//        if (game.Count == undefined)
-//            game.Count = 0;
-//        if (game.Total == undefined)
-//            game.Total = 0;
-//        gameHtml += gameItemTemplate(game);
-//    }
-
-//    var root = $("#_gameList");
-//    root
-//        .children().remove()
-//        .end()
-//        .append($(gameHtml));
-//    if (displayAll)
-//        root.addClass("current-player-games");
-//    else
-//        root.removeClass("current-player-games");
-
-//    if (gameHtml != "") {
-//        $("#_gameList").children().tsort({ order: 'desc', attr: 'data-count' });
-//    }
-//}
-
-/////
-///// Loads the current player's game collection
-/////
-//function loadCurrentPlayerGames() {
-
-//}
-
-/////
-///// Called after a successful retrieval of the current player, populating their friend and game list
-/////
-//function loadCurrentPlayerSuccess(player) {
-
-//    // save the current player SteamId for later
-//    currentPlayer = player;
-
-//    applyElementToPlayerInfo($(playerProfileTemplate(player)));
-
-//    // setup friends
-//    var friendHtml = "";
-//    for (i in player.Friends)
-//        friendHtml += friendItemTemplate(player.Friends[i]);
-
-//    $("#_friendList")
-//        .children().remove()
-//        .end()
-//        .append($(friendHtml));
-
-//    loadGames(player.Games, true);
-
-//    $(".main-app-window").fadeIn(500);
-//}
-
-/////
-///// Utility function for strings that remove leading and trailing whitespace
-/////
-//String.prototype.trim = function () {
-//    return this.replace(/^\s+|\s+$/g, "");
-//}
-
-/////
-///// Returns true if the complete list of friends is fully loaded; otherwise, returns false
-/////
-//function areFriendsFullyLoaded() {
-//    for (i in friendSteamIds) {
-//        if (!steam.isPlayerInCacheWithGameData(friendSteamIds[i]))
-//            return false;
-//    }
-//    return true;
-//}
-
-/////
-///// Calculates the right-side game list from the current selection, performing async update when needed
-/////
-//function calculateGameList() {
-
-//    friendSteamIds = [];
-
-//    var selectedElements = $(".friend-list .selected");
-
-//    // if we have no friends, then just show our collection
-//    if (selectedElements.length == 0) {
-//        loadCurrentPlayerGames();
-//        return;
-//    }
-
-//    selectedElements.each(function () {
-//        var playerListItem = $(this);
-//        playerListItem.attr("data-loading", "true");
-//        playerListItem.addClass("loading");
-//        var steamId = playerListItem.attr("data-id");
-//        friendSteamIds.push(steamId);
-//        steam.getPlayerGamesBySteamId(steamId,
-//            function () {
-
-//                // hide the loader image since we're done loading
-//                playerListItem.removeClass("loading");
-
-//                // if all friends are not loaded, then we must try again later
-//                if (!areFriendsFullyLoaded())
-//                    return;
-
-//                // perform the comparison and display the results
-//                var comparison = new GameCollectionComparison(currentPlayer);
-//                loadGames(comparison.games);
-//            });
-//    });
-//}
-
 ///
 /// Clears the UI of its current state, then asynchronously loads up a new user given the state of the username input
 ///
@@ -761,7 +684,7 @@ function loadCurrentPlayer() {
         window.currentPlayerView.remove();
 
     window.currentPlayerView = new CurrentPlayerView({ model: window.currentPlayerModel });
-    $("#currentPlayerInfo").append(window.currentPlayerView.$el)
+    $("#currentPlayerInfo").append(window.currentPlayerView.$el);
     window.currentPlayerModel.loadByFriendlyName(username);
 }
 
@@ -771,9 +694,7 @@ function loadCurrentPlayer() {
 function load() {
 
     // events
-
     var debouncedLoadCurrentPlayer = _.debounce(loadCurrentPlayer, 500);
-
     $("#username").keyup(debouncedLoadCurrentPlayer);
 
     // kick off in the event of carried over value (like in firefox reload)
