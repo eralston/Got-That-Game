@@ -315,7 +315,8 @@ var ComparisonModel = Backbone.Model.extend({
 
     setPlayer: function (player) {
         var friends = player.getFriends();
-        friends.on("change:selected", this.compare);
+        thisModel = this;
+        friends.on("change:selected", _.debounce(thisModel.compare, 1000));
         friends.on("games-loaded", this.playerLoaded);
         this.set({ player: player });
     },
@@ -343,16 +344,17 @@ var ComparisonModel = Backbone.Model.extend({
         } else {
             this.trigger("comparison-started");
 
+            console.log("Comparing " + selectedFriends.length + " friends");
             for (i in selectedFriends)
                 selectedFriends[i].loadGames();
         }
     },
 
-    areAllPlayersLoaded: function () {
-        var players = this.get("players");
-        for (i in players) {
-            var player = players[i];
-            if (player.Games == undefined || player.Games == null)
+    areAllFriendsLoaded: function () {
+        var friends = this.getComparisonFriends();
+        for (i in friends) {
+            var friend = friends[i];
+            if (friend.Games == undefined || friend.Games == null)
                 return false;
         }
         return true;
@@ -383,7 +385,7 @@ var ComparisonModel = Backbone.Model.extend({
     playerLoaded: function () {
 
         // check if we're still waiting
-        if (!this.areAllPlayersLoaded) {
+        if (!this.areAllFriendsLoaded) {
             this.trigger("comparison-continues");
             return;
         }
