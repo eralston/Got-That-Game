@@ -1,4 +1,11 @@
 ﻿
+// console polyfill
+if (console == undefined)
+    console = {};
+
+if (console.log == undefined)
+    console.log = function (a) { };
+
 // For storing a universal cache of game objects, then outputting their info for comparison purposes
 var GameHasher = function () {
     var allGames = {};
@@ -137,6 +144,17 @@ var Player = Backbone.Model.extend({
         this.set({ steamId: player.SteamId });
     },
 
+    isFetchingGames : function() {
+        var val = this.get("fetchingGames");
+        if (val == undefined)
+            return false;
+        return val;
+    },
+
+    setFetchingGames: function (fetching) {
+        this.set({ fetchingGames: fetching });
+    },
+
     getFriends: function () {
         return this.get("Friends");
     },
@@ -229,6 +247,10 @@ var Player = Backbone.Model.extend({
 
     loadGames: function (force) {
         var thisModel = this;
+
+        if (thisModel.isFetchingGames())
+            return;
+
         var player = thisModel.getPlayer();
 
         if (force == undefined || !force) {
@@ -240,6 +262,7 @@ var Player = Backbone.Model.extend({
 
         thisModel.trigger("games-loading");
 
+        thisModel.setFetchingGames(true);
         $.get("/Steam/GamesBySteamId/" + player.SteamId, function (games, textStatus, jqXHR) {
 
             var player = thisModel.getPlayer();
@@ -248,9 +271,10 @@ var Player = Backbone.Model.extend({
             player.GamesHash = window.gameHasher.createGameHash(games);
 
             thisModel.setPlayer(player);
-
+            thisModel.setFetchingGames(false);
             thisModel.trigger("games-loaded");
         }).fail(function () {
+            thisModel.setFetchingGames(false);
             thisModel.trigger("games-load-failed");
         });
     },
@@ -292,7 +316,7 @@ var ComparisonModel = Backbone.Model.extend({
     setPlayer: function (player) {
         var friends = player.getFriends();
         friends.on("change:selected", this.compare);
-        // friends.on("games-loaded", this.playerLoaded);
+        friends.on("games-loaded", this.playerLoaded);
         this.set({ player: player });
     },
 
@@ -305,15 +329,18 @@ var ComparisonModel = Backbone.Model.extend({
         return player.getFriends().where({ selected: true });
     },
 
+    getGames: function() {
+        return this.get("games");
+    },
+
     // starts the comparison, async completing on the "comparison-complete" event
     compare: function (a, b, c) {
 
         var selectedFriends = this.getComparisonFriends();
 
         if (selectedFriends.length == 0) {
-
+            this.trigger("no-comparison");
         } else {
-
             this.trigger("comparison-started");
 
             for (i in selectedFriends)
@@ -334,7 +361,7 @@ var ComparisonModel = Backbone.Model.extend({
     ///
     /// Increments the value at the given key within the given hash
     ///
-    incrementHashAtKey: function (key) {
+    incrementHashAtKey: function (key, comparisonHash) {
         if (!(key in comparisonHash))
             comparisonHash[key] = 1;
         else
@@ -344,9 +371,9 @@ var ComparisonModel = Backbone.Model.extend({
     ///
     /// Accumulates the count of shared games between the two player objects, modifying the given count hash
     ///
-    accumulateCount: function (player) {
+    accumulateCount: function (player, comparisonHash) {
         for (appId in player.GamesHash) {
-            incrementHashAtKey(appId);
+            this.incrementHashAtKey(appId, comparisonHash);
         }
     },
 
@@ -366,40 +393,18 @@ var ComparisonModel = Backbone.Model.extend({
         // perform the collection comparison
 
         // count the player
-        this.accumulateCount(currentPlayer);
-
+        this.accumulateCount(this.getPlayer().getPlayer(), comparisonHash);
+        var friends = this.getComparisonFriends();
         // accumulate the friends
-        for (i in friendSteamIds) {
-            var friend = steam.getFromPlayerCache(friendSteamIds[i]);
-            this.accumulateCount(friend);
+        for (i in friends) {
+            var friend = friends[i];
+            this.accumulateCount(friend.getPlayer(), comparisonHash);
         }
 
         // set the result of the accumulation
-        var games = steam.getGamesWithCounts(comparisonHash, friendSteamIds.length + 1);
+        var games = window.gameHasher.getGamesWithCounts(comparisonHash, friends.length + 1);
         this.set({ games: games });
         this.trigger("comparison-complete");
-    }
-});
-
-var CurrentPlayer = Backbone.Model.extend({
-
-    initialize: function () {
-        _.bindAll(this);
-    },
-
-    getCurrentPlayer: function () {
-        return this.get("CurrentPlayer");
-    },
-
-    loadFromFriendlyName: function (friendlyName) {
-        var player = new Player();
-        player.loadByFriendlyName(friendlyName);
-    },
-
-    refreshFriends: function () {
-    },
-
-    compareSelectedFriends: function () {
     }
 });
 
@@ -408,17 +413,18 @@ var CurrentPlayer = Backbone.Model.extend({
 ///
 var ComparisonView = Backbone.View.extend({
 
-    className: ".game-comparison",
+    className: "game-comparison",
 
     events: {
         "click .refresh": "refresh"
     },
 
     initialize: function () {
+
         _.bindAll(this);
         this.listenTo(this.model, "comparison-started", this.renderLoading);
         this.listenTo(this.model, "comparison-continues", this.renderLoading);
-        this.listenTo(this.model, "comparison-complete", this.renderFail);
+        this.listenTo(this.model, "comparison-complete", this.renderResult);
     },
 
     template: _.template($("#_gameItemTemplate").html()),
@@ -434,9 +440,19 @@ var ComparisonView = Backbone.View.extend({
         var friends = this.model.getComparisonFriends();
         var html = "";
         for (i in friends) {
-            html = this.loadingTemplate(friends.getPlayer());
+            html += this.loadingTemplate(friends[i].getPlayer());
         }
         this.$el.html(html);
+    },
+
+    renderResult: function () {
+        var games = this.model.getGames();
+        var html = "";
+        for (i in games) {
+            html += this.template(games[i]);
+        }
+        this.$el.html(html);
+        this.$el.children().tsort({order:'desc', attr: 'data-count'});
     },
 
     renderFail: function () {
@@ -470,7 +486,8 @@ var FriendView = Backbone.View.extend({
 
     template: _.template($("#_friendItemTemplate").html()),
 
-    showProgress: function() {
+    showProgress: function () {
+        this.hideError();
         this.$el.find(".friend-list-item").addClass("loading");
     },
 
@@ -483,7 +500,8 @@ var FriendView = Backbone.View.extend({
         this.$el.find(".friend-list-item").addClass("error");
     },
 
-    hideError:function() {
+    hideError: function () {
+        this.hideProgress();
         this.$el.find(".friend-list-item").removeClass("error");
     },
 
@@ -600,39 +618,38 @@ var CurrentPlayerView = Backbone.View.extend({
 
     loadCurrentPlayerGameColletion: function () {
 
-        if (window.gameView != undefined && window.gameView != null)
-            window.gameView.remove();
+        if (this.gameView != undefined && this.gameView != null)
+            this.gameView.remove();
 
-        window.gameView = new GamesView({ model: this.model });
-        $("#_gameList").append(window.gameView.$el);
+        this.gameView = new GamesView({ model: this.model });
+        $("#_gameList").append(this.gameView.$el);
 
         this.model.loadGames();
     },
 
     loadCurrentPlayerFriends: function () {
 
-        if (window.friendsView != undefined && window.friendsView != null)
-            window.friendsView.remove();
+        if (this.friendsView != undefined && this.friendsView != null)
+            this.friendsView.remove();
 
-        window.friendsView = new FriendsView({ model: this.model });
-        $("#_friendList").append(window.friendsView.$el);
+        this.friendsView = new FriendsView({ model: this.model });
+        $("#_friendList").append(this.friendsView.$el);
         this.model.loadFriends();
     },
 
     loadCurrentPlayerComparison: function () {
 
-        if (window.comparisonView != undefined && window.comparisonView != null)
-            window.comparisonView.remove();
+        if (this.comparisonView != undefined && this.comparisonView != null)
+            this.comparisonView.remove();
 
-        var comparison = new ComparisonModel();
-        comparison.setPlayer(this.model);
-        window.comparisonView = new ComparisonView({ model: comparison });
-        $("#_comparison").append(window.comparisonView.$el);
-    },
+        this.comparisonModel = new ComparisonModel();
+        var thisView = this;
+        this.comparisonModel.on("no-comparison", function () { thisView.showGameCollection(true); });
+        this.comparisonModel.on("comparison-started", function () { thisView.showGameCollection(false); });
 
-    loadGameView: function () {
-
-        this.loadCurrentPlayerGameColletion();
+        this.comparisonModel.setPlayer(this.model);
+        this.comparisonView = new ComparisonView({ model: this.comparisonModel });
+        $("#_comparison").append(this.comparisonView.$el);
     },
 
     render: function () {
@@ -643,30 +660,22 @@ var CurrentPlayerView = Backbone.View.extend({
 
             $(".main-app-window").fadeIn(500);
 
+            this.loadCurrentPlayerGameColletion();
             this.loadCurrentPlayerFriends();
-
-            this.loadGameView();
+            this.loadCurrentPlayerComparison();
+            this.showGameCollection(true);
         }
-    }
-});
-
-var ComparisonView = Backbone.View.extend({
-    events: {
     },
 
-    initialize: function () {
-        _.bindAll(this, "render");
-        this.listenTo(this.model, "header-loaded", this.render);
-    },
-
-    template: _.template($("#_currentPlayerProfileTemplate").html()),
-
-    render: function () {
-        var playerModel = this.model.getPlayer();
-        if (playerModel != undefined) {
-
+    showGameCollection: function (show) {
+        if (show) {
+            this.comparisonView.$el.hide();
+            this.gameView.$el.show();
+        } else {
+            this.comparisonView.$el.show();
+            this.gameView.$el.hide();
         }
-    }
+    },
 });
 
 ///

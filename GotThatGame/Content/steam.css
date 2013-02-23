@@ -36,8 +36,6 @@
         top: 0.5em;
     }
 
-
-
 /* Games Area */
 
 .game-list {
@@ -66,7 +64,7 @@
     text-decoration: none;
 }
 
-.game-list .thumbnail {
+.game-list-item .thumbnail {
     width: 8em;
 }
 
@@ -103,8 +101,12 @@
     top: 0.5em;
 }
 
-.selected .friends-list-item  .friend-refresh, .friend-list-item:hover .friend-refresh {
+.selected .friends-list-item .friend-refresh, .friend-list-item:hover .friend-refresh {
     display: block !important;
+}
+
+.selected .friends-list-item.error .friend-refresh, .error.friend-list-item:hover .friend-refresh {
+    display:none !important;
 }
 
 .friend-list-item .friend-add {
