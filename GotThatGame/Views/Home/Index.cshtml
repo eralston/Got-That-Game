@@ -1,4 +1,5 @@
 @using Combres.Mvc
+@using GotThatGame
 
 @{
     ViewBag.Title = "Got That Game? - A simple way to compare Steam game collections";
@@ -42,8 +43,8 @@
 @*Current Player*@
 <script id="_currentPlayerProfileLoadingTemplate" type="text/html">
     <div class="loading-player-wrapper">
+        <i class="icon-loading icon-spinner icon-spin"></i>
         <span>Searching for Steam user {{Name}}...</span>
-        <img src="/Content/Images/ajax-loader.gif" alt="Loading..." class="loader-image loading" />
     </div>
 </script>
 <script id="_currentPlayerProfileTemplate" type="text/html">
@@ -58,7 +59,7 @@
 @*Friends *@
 <script id="_friendsLoadingTemplate" type="text/html">
     <div>
-        <i class="icon-loading icon-spinner"></i>
+        <i class="icon-loading icon-spinner icon-spin"></i>
         Friends Loading...
     </div>
 </script>
@@ -84,7 +85,7 @@
 @*Games*@
 <script id="_gamesLoadingTemplate" type="text/html">
     <div>
-        <i class="icon-loading icon-spinner"></i>
+        <i class="icon-loading icon-spinner icon-spin"></i>
         Games Loading...
     </div>
 </script>
@@ -123,7 +124,13 @@
             interpolate: /\{\{(.+?)\}\}/g
         };
     </script>
-    @*@Url.CombresLink("appJs")*@
-    <script src="~/Scripts/jquery.tinysort.min.js"></script>
-    <script src="~/Scripts/Steam.js"></script>
+    @if (@Html.IsDebug())
+    {
+        <script src="~/Scripts/jquery.tinysort.min.js"></script>
+        <script src="~/Scripts/Steam.js"></script>
+    }
+    else
+    {
+        @Url.CombresLink("appJs")
+    }
 }

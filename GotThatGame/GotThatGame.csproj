@@ -149,6 +149,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="HtmlHelperExtensions.cs" />
     <Compile Include="Models\ApiHelper.cs" />
     <Compile Include="Models\Game.cs" />
     <Compile Include="JsonHelper.cs" />
@@ -166,7 +167,6 @@
     <Content Include="Content\Fonts\fontawesome-ie7.css" />
     <Content Include="Content\Fonts\fontawesome.css" />
     <Content Include="Content\Fonts\icon-reference.html" />
-    <Content Include="Content\Images\ajax-loader.gif" />
     <Content Include="Content\Images\sits_large_border.png" />
     <Content Include="Content\Images\sits_large_noborder.png" />
     <Content Include="Content\Images\sits_small.png" />

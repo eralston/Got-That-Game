@@ -14,18 +14,6 @@ namespace GotThatGame.Test
     [TestClass]
     public class SteamControllerTest
     {
-        [TestMethod]
-        public void CurrentUserPlayerByFriendlyNameTest()
-        {
-            // Arrange
-            var controller = new SteamController();
-
-            // Act
-            var result = controller.CurrentUserPlayerByFriendlyName("eralston");
-
-            // Assert
-            Assert.IsNotNull(result); // Todo: Make assertions, then remove this line
-        }
 
         [TestMethod]
         public void PlayerByFriendlyNameTest()

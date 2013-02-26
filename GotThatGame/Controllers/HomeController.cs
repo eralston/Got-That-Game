@@ -11,22 +11,25 @@ namespace GotThatGame.Controllers
     /// </summary>
     public class HomeController : Controller
     {
-
+        [OutputCache(CacheProfile = "Dynamic")]
         public ActionResult Index()
         {
             return View();
         }
 
+        [OutputCache(CacheProfile = "Static")]
         public ViewResult Legal()
         {
         	return View();
         }
 
+        [OutputCache(CacheProfile = "Static")]
         public ViewResult About()
         {
         	return View();
         }
 
+        [OutputCache(CacheProfile = "Static")]
         public ViewResult Support()
         {
         	return View();

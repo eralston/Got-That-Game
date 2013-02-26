@@ -19,25 +19,12 @@ namespace GotThatGame.Controllers
     public class SteamController : Controller
     {
         /// <summary>
-        /// Given a friendly name (AKA Vanity URL), returns a fully loaded player object with friends and games
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet]
-        public JsonResult CurrentUserPlayerByFriendlyName(string id)
-        {
-            Player currentPlayer = Player.GetPlayerByFriendlyName(id);
-            currentPlayer.LoadFriends();
-            currentPlayer.LoadGames();
-            return Json(currentPlayer, JsonRequestBehavior.AllowGet);
-        }
-
-        /// <summary>
         /// Given a friendly name (AKA Vanity URL), returns a header for the player
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
+        [OutputCache(CacheProfile = "InstantById")]
         public JsonResult PlayerByFriendlyName(string id)
         {
             Player currentPlayer = Player.GetPlayerByFriendlyName(id);
@@ -51,6 +38,7 @@ namespace GotThatGame.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
+        [OutputCache(CacheProfile = "InstantById")]
         public JsonResult PlayerBySteamId(string id)
         {
             Player currentPlayer = Player.GetPlayerBySteamId(id);
@@ -63,6 +51,7 @@ namespace GotThatGame.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
+        [OutputCache(CacheProfile = "InstantById")]
         public JsonResult FriendsBySteamId(string id)
         {
             IEnumerable<Player> friends = Player.GetFriendsOfPlayerBySteamId(id);
@@ -75,6 +64,7 @@ namespace GotThatGame.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
+        [OutputCache(CacheProfile = "InstantById")]
         public JsonResult GamesBySteamId(string id)
         {
             var games = Game.GetGamesForPlayer(id);
