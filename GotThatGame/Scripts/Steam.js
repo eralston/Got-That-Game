@@ -6,6 +6,12 @@ if (console == undefined)
 if (console.log == undefined)
     console.log = function (a) { };
 
+// utility functions
+function removeViewIfExists(view) {
+    if (view != undefined && view != null)
+        view.remove();
+}
+
 // For storing a universal cache of game objects, then outputting their info for comparison purposes
 var GameHasher = function () {
     var allGames = {};
@@ -644,8 +650,7 @@ var CurrentPlayerView = Backbone.View.extend({
 
     loadCurrentPlayerGameColletion: function () {
 
-        if (this.gameView != undefined && this.gameView != null)
-            this.gameView.remove();
+        removeViewIfExists(this.gameView);
 
         this.gameView = new GamesView({ model: this.model });
         $("#_gameList").append(this.gameView.$el);
@@ -655,8 +660,7 @@ var CurrentPlayerView = Backbone.View.extend({
 
     loadCurrentPlayerFriends: function () {
 
-        if (this.friendsView != undefined && this.friendsView != null)
-            this.friendsView.remove();
+        removeViewIfExists(this.friendsView);
 
         this.friendsView = new FriendsView({ model: this.model });
         $("#_friendList").append(this.friendsView.$el);
@@ -665,8 +669,7 @@ var CurrentPlayerView = Backbone.View.extend({
 
     loadCurrentPlayerComparison: function () {
 
-        if (this.comparisonView != undefined && this.comparisonView != null)
-            this.comparisonView.remove();
+        removeViewIfExists(this.comparisonView);
 
         this.comparisonModel = new ComparisonModel();
         var thisView = this;
@@ -705,19 +708,21 @@ var CurrentPlayerView = Backbone.View.extend({
     },
 });
 
+
+
 ///
 /// Clears the UI of its current state, then asynchronously loads up a new user given the state of the username input
 ///
 function loadCurrentPlayer() {
     var username = $("#username").val();
     username = username.trim();
+
     if (username == "")
         return;
 
     window.currentPlayerModel = new Player();
 
-    if (window.currentPlayerView != undefined && window.currentPlayerView != null)
-        window.currentPlayerView.remove();
+    removeViewIfExists(window.currentPlayerView);
 
     window.currentPlayerView = new CurrentPlayerView({ model: window.currentPlayerModel });
     $("#currentPlayerInfo").append(window.currentPlayerView.$el);
