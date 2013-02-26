@@ -353,7 +353,8 @@ var ComparisonModel = Backbone.Model.extend({
     areAllFriendsLoaded: function () {
         var friends = this.getComparisonFriends();
         for (i in friends) {
-            var friend = friends[i];
+            var friendModel = friends[i];
+            var friend = friendModel.getPlayer();
             if (friend.Games == undefined || friend.Games == null)
                 return false;
         }
@@ -385,7 +386,7 @@ var ComparisonModel = Backbone.Model.extend({
     playerLoaded: function () {
 
         // check if we're still waiting
-        if (!this.areAllFriendsLoaded) {
+        if (!this.areAllFriendsLoaded()) {
             this.trigger("comparison-continues");
             return;
         }
