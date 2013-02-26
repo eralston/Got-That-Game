@@ -144,7 +144,7 @@ var Player = Backbone.Model.extend({
         this.set({ steamId: player.SteamId });
     },
 
-    isFetchingGames : function() {
+    isFetchingGames: function () {
         var val = this.get("fetchingGames");
         if (val == undefined)
             return false;
@@ -314,11 +314,17 @@ var ComparisonModel = Backbone.Model.extend({
     },
 
     setPlayer: function (player) {
-        var friends = player.getFriends();
-        thisModel = this;
-        friends.on("change:selected", _.debounce(thisModel.compare, 1000));
-        friends.on("games-loaded", this.playerLoaded);
+        if (player == undefined)
+            return;
+
         this.set({ player: player });
+        var friends = player.getFriends();
+
+        if (friends == undefined)
+            return;
+
+        friends.on("change:selected", _.debounce(function () { window.currentPlayerView.comparisonModel.compare(); }, 1000));
+        friends.on("games-loaded", this.playerLoaded);
     },
 
     getPlayer: function () {
@@ -330,7 +336,7 @@ var ComparisonModel = Backbone.Model.extend({
         return player.getFriends().where({ selected: true });
     },
 
-    getGames: function() {
+    getGames: function () {
         return this.get("games");
     },
 
@@ -460,7 +466,7 @@ var ComparisonView = Backbone.View.extend({
             html += this.template(games[i]);
         }
         this.$el.html(html);
-        this.$el.children().tsort({order:'desc', attr: 'data-count'});
+        this.$el.children().tsort({ order: 'desc', attr: 'data-count' });
     },
 
     renderFail: function () {
@@ -505,7 +511,7 @@ var FriendView = Backbone.View.extend({
         this.$el.find(".friend-list-item").removeClass("loading");
     },
 
-    showError: function() {
+    showError: function () {
         this.hideProgress();
         this.$el.find(".friend-list-item").addClass("error");
     },
@@ -570,7 +576,7 @@ var FriendsView = Backbone.View.extend({
 
 var gameTemplate = _.template($("#_gameItemTemplate").html());
 var gameLoadingTemplate = _.template($("#_gamesLoadingTemplate").html());
-var gameFailTemplate =  _.template($("#_gamesLoadFailedTemplate").html());
+var gameFailTemplate = _.template($("#_gamesLoadFailedTemplate").html());
 
 var GamesView = Backbone.View.extend({
     events: {
@@ -682,17 +688,18 @@ var CurrentPlayerView = Backbone.View.extend({
 
             this.loadCurrentPlayerGameColletion();
             this.loadCurrentPlayerFriends();
-            this.loadCurrentPlayerComparison();
             this.showGameCollection(true);
         }
     },
 
     showGameCollection: function (show) {
         if (show) {
-            this.comparisonView.$el.hide();
+            if(this.comparisonView != undefined)
+                this.comparisonView.$el.hide();
             this.gameView.$el.show();
         } else {
-            this.comparisonView.$el.show();
+            if (this.comparisonView != undefined)
+                this.comparisonView.$el.show();
             this.gameView.$el.hide();
         }
     },
