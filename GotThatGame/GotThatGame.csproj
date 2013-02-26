@@ -160,7 +160,9 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Content Include="App_Data\combres.xml" />
+    <Content Include="App_Data\combres.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Content\Fonts\fontawesome-ie7.css" />
     <Content Include="Content\Fonts\fontawesome.css" />
     <Content Include="Content\Fonts\icon-reference.html" />
@@ -219,6 +221,8 @@
     <Content Include="Content\Fonts\fontawesome.sass" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Properties\PublishProfiles\GotThatGame - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\GotThatGame - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\GotThatGame-Beta - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\GotThatGame-Beta - Web Deploy.pubxml" />
   </ItemGroup>

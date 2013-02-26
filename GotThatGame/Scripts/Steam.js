@@ -410,6 +410,11 @@ var ComparisonModel = Backbone.Model.extend({
     }
 });
 
+// Always pre-load the templates for better performance
+var comparisonTemplate = _.template($("#_gameItemTemplate").html());
+var comparisonLoadingTemplate = _.template($("#_friendItemTemplate").html());
+var comparisonFailTemplate = _.template($("#_comparisonFailedTemplate").html());
+
 ///
 /// A view for the right-side of the screen when performing a comparison
 ///
@@ -429,9 +434,9 @@ var ComparisonView = Backbone.View.extend({
         this.listenTo(this.model, "comparison-complete", this.renderResult);
     },
 
-    template: _.template($("#_gameItemTemplate").html()),
-    loadingTemplate: _.template($("#_friendItemTemplate").html()),
-    failTemplate: _.template($("#_comparisonFailedTemplate").html()),
+    template: comparisonTemplate,
+    loadingTemplate: comparisonLoadingTemplate,
+    failTemplate: comparisonFailTemplate,
 
     refresh: function () {
         this.model.compare();
@@ -463,6 +468,8 @@ var ComparisonView = Backbone.View.extend({
     }
 });
 
+var friendTemplate = _.template($("#_friendItemTemplate").html());
+
 // View for one row in the friends list
 var FriendView = Backbone.View.extend({
     events: {
@@ -486,7 +493,7 @@ var FriendView = Backbone.View.extend({
         this.model.loadGames();
     },
 
-    template: _.template($("#_friendItemTemplate").html()),
+    template: friendTemplate,
 
     showProgress: function () {
         this.hideError();
@@ -520,6 +527,10 @@ var FriendView = Backbone.View.extend({
     }
 });
 
+var friendTemplate = _.template($("#_friendItemTemplate").html());
+var friendLoadingTemplate = _.template($("#_friendsLoadingTemplate").html());
+var friendFailTemplate = _.template($("#_friendsLoadFailedTemplate").html());
+
 // Displays friend information for the current player
 var FriendsView = Backbone.View.extend({
     className: "friend-view",
@@ -535,9 +546,9 @@ var FriendsView = Backbone.View.extend({
         this.listenTo(this.model, "friends-load-failed", this.renderFail);
     },
 
-    template: _.template($("#_friendItemTemplate").html()),
-    loadingTemplate: _.template($("#_friendsLoadingTemplate").html()),
-    failTemplate: _.template($("#_friendsLoadFailedTemplate").html()),
+    template: friendTemplate,
+    loadingTemplate: friendLoadingTemplate,
+    failTemplate: friendFailTemplate,
 
     renderLoading: function () {
         this.$el.html(this.loadingTemplate());
@@ -556,6 +567,10 @@ var FriendsView = Backbone.View.extend({
     }
 });
 
+var gameTemplate = _.template($("#_gameItemTemplate").html());
+var gameLoadingTemplate = _.template($("#_gamesLoadingTemplate").html());
+var gameFailTemplate =  _.template($("#_gamesLoadFailedTemplate").html());
+
 var GamesView = Backbone.View.extend({
     events: {
         "click .refresh-games": "refresh"
@@ -570,9 +585,9 @@ var GamesView = Backbone.View.extend({
         this.render();
     },
 
-    template: _.template($("#_gameItemTemplate").html()),
-    loadingTemplate: _.template($("#_gamesLoadingTemplate").html()),
-    failTemplate: _.template($("#_gamesLoadFailedTemplate").html()),
+    template: gameTemplate,
+    loadingTemplate: gameLoadingTemplate,
+    failTemplate: gameFailTemplate,
 
     refresh: function () {
         this.model.loadGames();
@@ -604,6 +619,8 @@ var GamesView = Backbone.View.extend({
     }
 });
 
+var currentPlayerTemplate = _.template($("#_currentPlayerProfileTemplate").html());
+
 // Displays information for the current player at the top of the page
 var CurrentPlayerView = Backbone.View.extend({
 
@@ -616,7 +633,7 @@ var CurrentPlayerView = Backbone.View.extend({
         this.listenTo(this.model, "friends-loaded", this.loadCurrentPlayerComparison);
     },
 
-    template: _.template($("#_currentPlayerProfileTemplate").html()),
+    template: currentPlayerTemplate,
 
     loadCurrentPlayerGameColletion: function () {
 
