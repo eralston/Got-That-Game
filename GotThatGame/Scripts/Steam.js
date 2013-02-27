@@ -460,6 +460,9 @@ var ComparisonModel = Backbone.Model.extend({
         this.trigger("comparison-complete");
     },
 
+    ///
+    /// Called when a player's collection fails to load, we have to check if that's a failure for the current group of players then optionally cry to the user
+    ///
     playerLoadFailed: function () {
         var friends = this.getComparisonFriends();
         for (i in friends) {
@@ -468,6 +471,33 @@ var ComparisonModel = Backbone.Model.extend({
                 this.trigger("comparison-failed");
             }
         }
+    },
+
+    groupPlayerWithOrWithout: function (appId, player, friendsWith, friendsWithout) {
+        if (appId in player.GamesHash)
+            friendsWith.push(player);
+        else
+            friendsWithout.push(player);
+    },
+
+    ///
+    /// Returns an object of the form { playerWith: [], playersWithout: [] } for a given appId and the current comparison group
+    ///
+    comparisonDetailsForAppId: function (appId) {
+
+        var playersWith = [];
+        var playersWithout = [];
+
+        var player = this.getPlayer();
+        this.groupPlayerWithOrWithout(appId, player.getPlayer(), playersWith, playersWithout);
+
+        var friends = this.getComparisonFriends();
+        for (i in friends) {
+            var friend = friends[i].getPlayer();
+            this.groupPlayerWithOrWithout(appId, friend, playersWith, playersWithout);
+        }
+
+        return { playersWith: playersWith, playersWithout: playersWithout };
     }
 });
 
@@ -477,6 +507,10 @@ var comparisonLoadingHeaderTemplate = _.template($("#_comparisonLoadingTemplate"
 var comparisonLoadingTemplate = _.template($("#_friendItemTemplate").html());
 var comparisonFailTemplate = _.template($("#_comparisonFailedTemplate").html());
 
+var comparisonFriendWithoutTemplate = _.template($("#_comparisonFriendWithoutTemplate").html());
+var comparisonFriendWithTemplate = _.template($("#_comparisonFriendWithTemplate").html());
+var comparisonDetailTemplate = _.template($("#_comparisonDetailTemplate").html());
+
 ///
 /// A view for the right-side of the screen when performing a comparison
 ///
@@ -485,7 +519,8 @@ var ComparisonView = Backbone.View.extend({
     className: "game-comparison",
 
     events: {
-        "click .refresh": "refresh"
+        "click .refresh": "refresh",
+        "hover .game-list-item": "compareDetails"
     },
 
     initialize: function () {
@@ -500,7 +535,9 @@ var ComparisonView = Backbone.View.extend({
     loadingHeaderTemplate: comparisonLoadingHeaderTemplate,
     loadingTemplate: comparisonLoadingTemplate,
     failTemplate: comparisonFailTemplate,
-
+    friendWithTemplate:  comparisonFriendWithTemplate,
+    friendWithoutTemplate: comparisonFriendWithoutTemplate,
+    comparisonDetailTemplate: comparisonDetailTemplate,
 
     refresh: function () {
         this.model.compare();
@@ -530,6 +567,28 @@ var ComparisonView = Backbone.View.extend({
     renderFail: function () {
 
         this.$el.html(this.failTemplate())
+    },
+
+    compareDetails: function (event) {
+        var $this = $(event.currentTarget);
+        var hasMenu = $this.find(".comparison-detail-popup").length > 0;
+        if (hasMenu)
+            return;
+        var appId = $this.attr("data-app-id");
+        var comparisonDetails = this.model.comparisonDetailsForAppId(appId);
+        var html = "";
+        // load friends without
+        for (i in comparisonDetails.playersWithout) {
+            var playerWithout = comparisonDetails.playersWithout[i];
+            html += this.friendWithoutTemplate(playerWithout);
+        }
+        // load friends with
+        for (i in comparisonDetails.playersWith) {
+            var playerWith = comparisonDetails.playersWith[i];
+            html += this.friendWithTemplate(playerWith);
+        }
+        var html = this.comparisonDetailTemplate({ Html: html });
+        $this.append($(html));
     }
 });
 
@@ -762,6 +821,10 @@ var CurrentPlayerView = Backbone.View.extend({
     },
 });
 
+// add a little popup for showing who has and does not have a particular game
+$(".game-comparison .game-list-item").live("hover", function () {
+    window.currentPlayerView.comparisonModel
+});
 
 
 ///

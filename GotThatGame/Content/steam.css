@@ -23,17 +23,16 @@
 
 .friend-error-popup {
     display: none;
-    position:absolute;
+    position: absolute;
     top: 2em;
     width: 100%;
-    
-    z-index:1;
+    z-index: 1;
     background-color: #494951;
     background-image: url("/Content/Images/txture.png");
 }
 
 .friend-error-text-wrapper {
-    padding: 1em;
+    padding: 0.5em;
 }
 
 .error:hover .friend-error-popup {
@@ -42,10 +41,6 @@
 
 .refresh {
     cursor: pointer;
-}
-
-.comparison-loading-header {
-    margin: 1em 0;
 }
 
 .selected .friend-list-item {
@@ -97,6 +92,46 @@
 
 .current-player-games .game-count {
     display: none;
+}
+
+/*Comparison */
+
+.comparison-loading-header {
+    margin: 1em 0;
+}
+
+.comparison-detail-popup {
+    position: absolute;
+    top: 3em;
+    width: 100%;
+    background-color: black;
+    display: none;
+    z-index: 1;
+    background-color: #121214;
+    background-image: url("/Content/Images/txture.png");
+}
+
+.comparison-detail-popup-inner {
+    padding: 1em;
+}
+
+.game-comparison .game-list-item:hover {
+    background-color: #121214;
+    background-image: url("/Content/Images/txture.png");
+}
+
+    .game-comparison .game-list-item:hover .comparison-detail-popup {
+        display: block;
+    }
+
+a.comparison-friend-with {
+    color: #326AA3;
+    margin-right:1em;
+}
+
+a.comparison-friend-without {
+    color: #A53333;
+    margin-right:1em;
 }
 
 /* Utility areas for AJAX  */
