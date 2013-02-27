@@ -56,13 +56,21 @@ section, footer {
 
 h1 {
     font-size: 2em;
-    margin-top: 1.5em;
+    margin: 0;
+    padding: 0.25em 0 0 0;
 }
 
 h2 {
     font-size: 1.5em;
     margin-top: 1.5em;
 }
+
+    h2.subtitle {
+        font-family: "Abel", "arial", sans-serif;
+        font-size: 1.5em;
+        margin: 0;
+        padding: 0.25em 0 0.5em 0;
+    }
 
 h3 {
     font-size: 1.25em;
@@ -77,6 +85,7 @@ h4 {
 p {
     margin-top: 1em;
     line-height: 1.5em;
+    padding-right: 2em;
 }
 
 h1, h2, h3, h4, h5, .logo {
@@ -132,12 +141,11 @@ a {
 }
 
     a:visited {
-        color: #40581b;
+        color: #658C2B;
     }
 
     a:hover {
-        color: #5c7f27;
-        text-decoration: dotted;
+        color: #8ABF3B;
     }
 
 .header-wrapper {
@@ -147,22 +155,14 @@ a {
 }
 
 header, .header-wrapper {
-    height: 4em;
-    padding-top: 0.5em;
     color: #f3f3f8;
 }
 
 footer {
     color: #8b8c8c;
+    border-top: 1px solid #8b8c8c;
+    margin-top: 2em;
 }
-
-    footer .two-way {
-        border-left: 2px solid #262626;
-        border-right: 2px solid #262626;
-        border-radius: 1em;
-        box-shadow-left: 0 0 1em #262626;
-        box-shadow-right: 0 0 1em #262626;
-    }
 
     footer h2 {
         margin-top: 0.5em;
@@ -171,8 +171,6 @@ footer {
 
 .logo {
     color: #f3f3f8 !important;
-    font-size: 2em;
-    height: 3em;
     text-decoration: none;
     text-shadow: 1px 1px 0 #f3f3f8, 2px 2px 0 #f3f3f8, 3px 3px 0 #8b8c8c, 4px 4px 0 #8b8c8c, 5px 5px 0 #8b8c8c, 6px 6px 0 #8b8c8c;
 }

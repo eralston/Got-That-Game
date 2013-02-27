@@ -1,10 +1,9 @@
 @using Combres.Mvc
+@using GotThatGame
 @{
     Layout = null;
 }
-
 <!DOCTYPE html>
-
 <html>
 <head>
     <meta charset="utf-8" />
@@ -16,19 +15,29 @@
     <meta name="copyright" content="Copyright 2013">
     <meta name="robots" content="index, follow">
     <meta name="title" content="@ViewBag.Title">
-    <title>@ViewBag.Title</title>
+    <title>
+        @ViewBag.Title
+        Got That Game? Compare Your Steam Games With Friends
+    </title>
 
     @*CSS*@
     <link href='http://fonts.googleapis.com/css?family=Abel|Aldrich' rel='stylesheet' type='text/css' />
-    @Url.CombresLink("siteCss")
+    @if (@Html.IsDebug())
+    {
+        <link href="~/Content/site.css" rel="stylesheet" type="text/css" />
+    }
+    else
+    {
+        @Url.CombresLink("siteCss")
+    }
     @RenderSection("head", false)
 </head>
 <body>
     <div class='header-wrapper'>
         <header>
             <div class='wrapper'>
-                <a class='logo huge' href='/'>Got&nbsp;That&nbsp;Game?</a>
-                <span style="margin-left: 1em">Beta</span>
+                <h1><a class='logo huge' href='/'>Got&nbsp;That&nbsp;Game?</a></h1>
+                <h2 class="subtitle">Compare Your Steam Games With Friends</h2>
             </div>
         </header>
     </div>
@@ -63,6 +72,7 @@
             </p>
         </div>
         <div class='col-third'>
+            <h3>Made In the USA</h3>
             <p>
                 Created by <a href="http://erik-ralston.com" target="_blank">Erik Ralston</a>
             </p>

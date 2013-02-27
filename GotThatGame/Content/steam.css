@@ -193,9 +193,8 @@
     width: 118px;
 }
 
-
 #username {
-    margin: 1em 0;
+    margin: 0.5em 0;
     font-size: 2em;
     border-radius: 0.25em;
     border: 2px solid gray;

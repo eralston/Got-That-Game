@@ -2,23 +2,36 @@
 @using GotThatGame
 
 @{
-    ViewBag.Title = "Got That Game? - A simple way to compare Steam game collections";
+    ViewBag.Title = "";
 }
 
 @section head {
-    @Url.CombresLink("appCss")
+    @if (@Html.IsDebug())
+    {
+        <link href="~/Content/Fonts/fontawesome.css" type="text/css" rel="stylesheet" />
+        <link href="~/Content/steam.css" type="text/css" rel="stylesheet" />
+    }
+    else
+    {
+        @Url.CombresLink("appCss")
+    }
 }
 
 @*HTML content for this page*@
 <section>
-    <div class="col-half">
-        <h2>Steam Username</h2>
-        <input type="text" id="username" placeholder="Steam Username" />
-    </div>
     <div class='col-half'>
         <h2>What Should We Play?</h2>
+        <p>Ever find yourself struggling to choose what to play with your friends? Got That Game will help instantly find the game you have in common.</p>
+    </div>
+    <div class='col-half'>
+        <h2>How Does It Work?</h2>
         <p>Enter your <a href="http://steampowered.com">Steam</a> username and you will be able to view your game collection and easily compare it with friends</p>
-        <p>It's a fast way to find what you can play, right now!</p>
+    </div>
+</section>
+<section>
+    <div class="col-half">
+        <h2>Get Started</h2>
+        <input type="text" id="username" placeholder="Steam Username" />
     </div>
 </section>
 <section id="currentPlayerInfo">

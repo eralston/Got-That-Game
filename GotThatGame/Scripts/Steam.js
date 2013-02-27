@@ -317,6 +317,7 @@ var ComparisonModel = Backbone.Model.extend({
     initialize: function () {
         _.bindAll(this);
         this.set({ players: {} });
+        this.debouncedCompare = _.debounce(function () { window.currentPlayerView.comparisonModel.compare(); }, 1000);
     },
 
     setPlayer: function (player) {
@@ -329,7 +330,7 @@ var ComparisonModel = Backbone.Model.extend({
         if (friends == undefined)
             return;
 
-        friends.on("change:selected", _.debounce(function () { window.currentPlayerView.comparisonModel.compare(); }, 1000));
+        friends.on("change:selected", this.startCompare);
         friends.on("games-loaded", this.playerLoaded);
     },
 
@@ -346,8 +347,7 @@ var ComparisonModel = Backbone.Model.extend({
         return this.get("games");
     },
 
-    // starts the comparison, async completing on the "comparison-complete" event
-    compare: function (a, b, c) {
+    startCompare: function () {
 
         var selectedFriends = this.getComparisonFriends();
 
@@ -355,11 +355,18 @@ var ComparisonModel = Backbone.Model.extend({
             this.trigger("no-comparison");
         } else {
             this.trigger("comparison-started");
-
-            console.log("Comparing " + selectedFriends.length + " friends");
-            for (i in selectedFriends)
-                selectedFriends[i].loadGames();
+            this.debouncedCompare();
         }
+    },
+
+    // starts the comparison, async completing on the "comparison-complete" event
+    compare: function (a, b, c) {
+
+        var selectedFriends = this.getComparisonFriends();
+
+        console.log("Comparing " + selectedFriends.length + " friends");
+        for (i in selectedFriends)
+            selectedFriends[i].loadGames();
     },
 
     areAllFriendsLoaded: function () {
@@ -697,7 +704,7 @@ var CurrentPlayerView = Backbone.View.extend({
 
     showGameCollection: function (show) {
         if (show) {
-            if(this.comparisonView != undefined)
+            if (this.comparisonView != undefined)
                 this.comparisonView.$el.hide();
             this.gameView.$el.show();
         } else {
