@@ -27,9 +27,16 @@ namespace GotThatGame.Controllers
         [OutputCache(CacheProfile = "InstantById")]
         public JsonResult PlayerByFriendlyName(string id)
         {
-            Player currentPlayer = Player.GetPlayerByFriendlyName(id);
-            currentPlayer.FriendlyName = id;
-            return Json(currentPlayer, JsonRequestBehavior.AllowGet);
+            try
+            {
+                Player currentPlayer = Player.GetPlayerByFriendlyName(id);
+                currentPlayer.FriendlyName = id;
+                return Json(currentPlayer, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new Error(ex), JsonRequestBehavior.AllowGet);
+            }
         }
 
         /// <summary>
@@ -41,8 +48,15 @@ namespace GotThatGame.Controllers
         [OutputCache(CacheProfile = "InstantById")]
         public JsonResult PlayerBySteamId(string id)
         {
-            Player currentPlayer = Player.GetPlayerBySteamId(id);
-            return Json(currentPlayer, JsonRequestBehavior.AllowGet);
+            try
+            {
+                Player currentPlayer = Player.GetPlayerBySteamId(id);
+                return Json(currentPlayer, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new Error(ex), JsonRequestBehavior.AllowGet);
+            }
         }
 
         /// <summary>
@@ -54,8 +68,16 @@ namespace GotThatGame.Controllers
         [OutputCache(CacheProfile = "InstantById")]
         public JsonResult FriendsBySteamId(string id)
         {
-            IEnumerable<Player> friends = Player.GetFriendsOfPlayerBySteamId(id);
-            return Json(friends, JsonRequestBehavior.AllowGet);
+
+            try
+            {
+                IEnumerable<Player> friends = Player.GetFriendsOfPlayerBySteamId(id);
+                return Json(friends, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new Error(ex), JsonRequestBehavior.AllowGet);
+            }
         }
 
         /// <summary>
@@ -67,8 +89,15 @@ namespace GotThatGame.Controllers
         [OutputCache(CacheProfile = "InstantById")]
         public JsonResult GamesBySteamId(string id)
         {
-            var games = Game.GetGamesForPlayer(id);
-            return Json(games, JsonRequestBehavior.AllowGet);
+            try
+            {
+                var games = Game.GetGamesForPlayer(id);
+                return Json(games, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new Error(ex), JsonRequestBehavior.AllowGet);
+            }
         }
     }
 }

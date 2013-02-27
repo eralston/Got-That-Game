@@ -151,6 +151,7 @@
     </Compile>
     <Compile Include="HtmlHelperExtensions.cs" />
     <Compile Include="Models\ApiHelper.cs" />
+    <Compile Include="Models\Error.cs" />
     <Compile Include="Models\Game.cs" />
     <Compile Include="JsonHelper.cs" />
     <Compile Include="Models\Player.cs" />

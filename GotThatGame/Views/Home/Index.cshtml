@@ -92,6 +92,12 @@
         <div class="friend-loading icon-spin icon-spinner"></div>
         <div class="friend-add icon-plus-sign"></div>
         <div class="friend-added icon-ok-sign"></div>
+        <div class="friend-error-popup">
+            <div class="friend-error-text-wrapper">
+                <i class="icon-warning-sign"></i>
+                <span class="friend-error-text"></span>
+            </div>
+        </div>
     </div>
 </script>
 
@@ -122,8 +128,14 @@
 <script id="_comparisonFailedTemplate" type="text/html">
     <div>
         Comparison Load Failed<br />
-        <i class="icon-refresh refresh-games"></i>
+        <i class="icon-refresh refresh"></i>
         Try Again
+    </div>
+</script>
+<script id="_comparisonLoadingTemplate" type="text/html">
+    <div class="comparison-loading-header">
+        <i class="icon-loading icon-spinner icon-spin"></i>
+        Loading Game Collections &amp; Comparing...
     </div>
 </script>
 

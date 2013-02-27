@@ -15,26 +15,53 @@
     }
 
 .friend-list-item {
-    border-top: 1px solid #7B7B89;
+    border-top: 1px solid #2D2D33;
     position: relative;
     cursor: pointer;
     height: 2em;
 }
 
-    .selected .friend-list-item {
-        background-image: url("/Content/Images/txture.png");
-    }
+.friend-error-popup {
+    display: none;
+    position:absolute;
+    top: 2em;
+    width: 100%;
+    
+    z-index:1;
+    background-color: #494951;
+    background-image: url("/Content/Images/txture.png");
+}
 
-    .friend-list-item:hover {
-        background-color: #494951;
-        background-image: url("/Content/Images/txture.png");
-    }
+.friend-error-text-wrapper {
+    padding: 1em;
+}
 
-    .friend-list-item .friend-name {
-        position: absolute;
-        left: 3em;
-        top: 0.5em;
-    }
+.error:hover .friend-error-popup {
+    display: block;
+}
+
+.refresh {
+    cursor: pointer;
+}
+
+.comparison-loading-header {
+    margin: 1em 0;
+}
+
+.selected .friend-list-item {
+    background-image: url("/Content/Images/txture.png");
+}
+
+.friend-list-item:hover {
+    background-color: #494951;
+    background-image: url("/Content/Images/txture.png");
+}
+
+.friend-list-item .friend-name {
+    position: absolute;
+    left: 3em;
+    top: 0.5em;
+}
 
 /* Games Area */
 
@@ -43,7 +70,7 @@
 }
 
 .game-list-item {
-    border-top: 1px solid #7B7B89;
+    border-top: 1px solid #2D2D33;
     position: relative;
     height: 3em;
 }
@@ -106,7 +133,7 @@
 }
 
 .selected .friends-list-item.error .friend-refresh, .error.friend-list-item:hover .friend-refresh {
-    display:none !important;
+    display: none !important;
 }
 
 .friend-list-item .friend-add {
@@ -125,8 +152,8 @@
 }
 
 .friend-error {
-    display:none !important;
-    position:absolute;
+    display: none !important;
+    position: absolute;
     right: 2.5em;
     top: 0.5em;
 }
@@ -150,7 +177,7 @@
 }
 
 .friend-list-item.error .friend-error {
-    display:block !important;
+    display: block !important;
 }
 
 .friend-list-item.loading .friend-loading {
@@ -194,7 +221,7 @@
 }
 
 #username {
-    margin: 0.5em 0;
+    margin: 1em 0;
     font-size: 2em;
     border-radius: 0.25em;
     border: 2px solid gray;

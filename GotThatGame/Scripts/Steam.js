@@ -128,10 +128,22 @@ var Player = Backbone.Model.extend({
     initialize: function () {
         _.bindAll(this);
         this.setSelected(false);
+        this.setError();
     },
 
     cachePlayer: function (player) {
         window.playerCache.cachePlayer(player);
+    },
+
+    getError: function() {
+        this.attributes.error;
+    },
+
+    setError: function(txt) {
+        if (txt == undefined)
+            txt = "";
+
+        this.set({ error: txt });
     },
 
     setSelected: function (selected) {
@@ -157,8 +169,18 @@ var Player = Backbone.Model.extend({
         return val;
     },
 
-    setFetchingGames: function (fetching) {
+    didFailToLoadGames: function () {
+        var val = this.get("gameLoadFailed");
+        if (val == undefined)
+            return false;
+        return val;
+    },
+
+    setFetchingGames: function (fetching, gameLoadFailed) {
         this.set({ fetchingGames: fetching });
+        if (gameLoadFailed == undefined)
+            gameLoadFailed = false;
+        this.set({ gameLoadFailed: gameLoadFailed });
     },
 
     getFriends: function () {
@@ -214,10 +236,7 @@ var Player = Backbone.Model.extend({
 
         // if we can't, then fall back to web services
         this.trigger("header-loading");
-        $.get("/Steam/PlayerByFriendlyName/" + friendlyName, this.loadDone)
-            .fail(function () {
-                this.trigger("header-load-failed");
-            });
+        $.get("/Steam/PlayerByFriendlyName/" + friendlyName, this.loadDone);
     },
     loadBySteamId: function (steamId, force) {
 
@@ -234,13 +253,15 @@ var Player = Backbone.Model.extend({
 
         // if we can't, then fall back to web services
         this.trigger("header-loading");
-        $.get("/Steam/PlayerBySteamId/" + steamId, loadDone)
-            .fail(function () {
-                this.trigger("header-load-failed");
-            });
+        $.get("/Steam/PlayerBySteamId/" + steamId, loadDone);
     },
 
     loadDone: function (player, textStatus, jqXHR) {
+
+        if (player.ErrorText) {
+            this.trigger("header-load-failed");
+            return;
+        }
 
         // load this object
         this.setPlayer(player);
@@ -271,6 +292,13 @@ var Player = Backbone.Model.extend({
         thisModel.setFetchingGames(true);
         $.get("/Steam/GamesBySteamId/" + player.SteamId, function (games, textStatus, jqXHR) {
 
+            if (games.ErrorText != undefined) {
+                thisModel.setError(games.ErrorText);
+                thisModel.setFetchingGames(false, true);
+                thisModel.trigger("games-load-failed");
+                return;
+            }
+
             var player = thisModel.getPlayer();
 
             player.Games = games;
@@ -279,9 +307,6 @@ var Player = Backbone.Model.extend({
             thisModel.setPlayer(player);
             thisModel.setFetchingGames(false);
             thisModel.trigger("games-loaded");
-        }).fail(function () {
-            thisModel.setFetchingGames(false);
-            thisModel.trigger("games-load-failed");
         });
     },
 
@@ -301,12 +326,17 @@ var Player = Backbone.Model.extend({
 
         this.trigger("friends-loading");
         $.get("/Steam/FriendsBySteamId/" + player.SteamId, function (friends, textStatus, jqXHR) {
+
+            if (friends.ErrorText != undefined) {
+                thisModel.setError(friends.ErrorText);
+                thisModel.trigger("friends-load-failed");
+                return;
+            }
+
             var player = thisModel.getPlayer();
             thisModel.setFriends(friends);
 
             thisModel.trigger("friends-loaded");
-        }).fail(function () {
-            thisModel.trigger("friends-load-failed");
         });
     }
 });
@@ -332,6 +362,7 @@ var ComparisonModel = Backbone.Model.extend({
 
         friends.on("change:selected", this.startCompare);
         friends.on("games-loaded", this.playerLoaded);
+        friends.on("games-load-failed", this.playerLoadFailed);
     },
 
     getPlayer: function () {
@@ -427,11 +458,22 @@ var ComparisonModel = Backbone.Model.extend({
         var games = window.gameHasher.getGamesWithCounts(comparisonHash, friends.length + 1);
         this.set({ games: games });
         this.trigger("comparison-complete");
+    },
+
+    playerLoadFailed: function () {
+        var friends = this.getComparisonFriends();
+        for (i in friends) {
+            var friend = friends[i];
+            if (friend.didFailToLoadGames()) {
+                this.trigger("comparison-failed");
+            }
+        }
     }
 });
 
 // Always pre-load the templates for better performance
 var comparisonTemplate = _.template($("#_gameItemTemplate").html());
+var comparisonLoadingHeaderTemplate = _.template($("#_comparisonLoadingTemplate").html());
 var comparisonLoadingTemplate = _.template($("#_friendItemTemplate").html());
 var comparisonFailTemplate = _.template($("#_comparisonFailedTemplate").html());
 
@@ -450,13 +492,15 @@ var ComparisonView = Backbone.View.extend({
 
         _.bindAll(this);
         this.listenTo(this.model, "comparison-started", this.renderLoading);
-        this.listenTo(this.model, "comparison-continues", this.renderLoading);
         this.listenTo(this.model, "comparison-complete", this.renderResult);
+        this.listenTo(this.model, "comparison-failed", this.renderFail);
     },
 
     template: comparisonTemplate,
+    loadingHeaderTemplate: comparisonLoadingHeaderTemplate,
     loadingTemplate: comparisonLoadingTemplate,
     failTemplate: comparisonFailTemplate,
+
 
     refresh: function () {
         this.model.compare();
@@ -466,6 +510,7 @@ var ComparisonView = Backbone.View.extend({
 
         var friends = this.model.getComparisonFriends();
         var html = "";
+        html += this.loadingHeaderTemplate();
         for (i in friends) {
             html += this.loadingTemplate(friends[i].getPlayer());
         }
@@ -527,6 +572,8 @@ var FriendView = Backbone.View.extend({
     showError: function () {
         this.hideProgress();
         this.$el.find(".friend-list-item").addClass("error");
+        var txt = this.model.attributes.error;
+        this.$el.find(".friend-error-text").html(txt);
     },
 
     hideError: function () {
