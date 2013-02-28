@@ -69,11 +69,6 @@
     position: relative;
     max-height: 3em;
     overflow: hidden;
-    -moz-transition: 0.25s;
-    -ms-transition: 0.25s;
-    -o-transition: 0.25s;
-    -webkit-transition: 0.25s;
-    transition: 0.25s;
 }
 
     .game-list-item .game-name {
@@ -119,11 +114,6 @@
     background-color: #121214;
     background-image: url("/Content/Images/txture.png");
     max-height: 999em;
-    -moz-transition: 0.25s;
-    -ms-transition: 0.25s;
-    -o-transition: 0.25s;
-    -webkit-transition: 0.25s;
-    transition: 0.25s;
 }
 
     .game-comparison .game-list-item:hover .comparison-detail-popup {
