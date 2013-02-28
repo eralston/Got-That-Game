@@ -67,7 +67,13 @@
 .game-list-item {
     border-top: 1px solid #2D2D33;
     position: relative;
-    height: 3em;
+    max-height: 3em;
+    overflow: hidden;
+    -moz-transition: 0.25s;
+    -ms-transition: 0.25s;
+    -o-transition: 0.25s;
+    -webkit-transition: 0.25s;
+    transition: 0.25s;
 }
 
     .game-list-item .game-name {
@@ -101,37 +107,37 @@
 }
 
 .comparison-detail-popup {
-    position: absolute;
-    top: 3em;
     width: 100%;
-    background-color: black;
-    display: none;
-    z-index: 1;
     background-color: #121214;
-    background-image: url("/Content/Images/txture.png");
 }
 
 .comparison-detail-popup-inner {
     padding: 1em;
 }
 
-.game-comparison .game-list-item:hover {
+.game-list-item:hover {
     background-color: #121214;
     background-image: url("/Content/Images/txture.png");
+    max-height: 999em;
+    -moz-transition: 0.25s;
+    -ms-transition: 0.25s;
+    -o-transition: 0.25s;
+    -webkit-transition: 0.25s;
+    transition: 0.25s;
 }
 
     .game-comparison .game-list-item:hover .comparison-detail-popup {
-        display: block;
+        background-image: url("/Content/Images/txture.png");
     }
 
 a.comparison-friend-with {
     color: #326AA3;
-    margin-right:1em;
+    margin-right: 1em;
 }
 
 a.comparison-friend-without {
     color: #A53333;
-    margin-right:1em;
+    margin-right: 1em;
 }
 
 /* Utility areas for AJAX  */
@@ -245,7 +251,7 @@ a.comparison-friend-without {
 }
 
 .steam-login-button {
-    -webkit-animation: logo-glow 1s ease-in-out infinite alternate;
+    -webkit-animation: logo-glow 0.25s ease-in-out infinite alternate;
     background-image: url("/Content/Images/sits_large_border.png");
     border-radius: 7px;
     box-shadow: 0 0 100px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
@@ -265,5 +271,5 @@ a.comparison-friend-without {
 }
 
     #username[value=""] {
-        -webkit-animation: logo-glow 1s ease-in-out infinite alternate;
+        -webkit-animation: logo-glow 0.25s ease-in-out infinite alternate;
     }

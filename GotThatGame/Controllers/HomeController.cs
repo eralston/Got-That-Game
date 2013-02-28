@@ -34,6 +34,5 @@ namespace GotThatGame.Controllers
         {
         	return View();
         }
-
     }
 }
