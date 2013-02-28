@@ -116,18 +116,20 @@
     max-height: 999em;
 }
 
-    .game-comparison .game-list-item:hover .comparison-detail-popup {
-        background-image: url("/Content/Images/txture.png");
-    }
+.game-comparison .game-list-item:hover .comparison-detail-popup {
+    background-image: url("/Content/Images/txture.png");
+}
 
 a.comparison-friend-with {
     color: #326AA3;
-    margin-right: 1em;
+    margin: 0.25em 1em;
+    display: inline-block;
 }
 
 a.comparison-friend-without {
     color: #A53333;
-    margin-right: 1em;
+    margin: 0 1em 0.25em 0;
+    display: inline-block;
 }
 
 /* Utility areas for AJAX  */
