@@ -253,7 +253,7 @@ var Player = Backbone.Model.extend({
 
         // if we can't, then fall back to web services
         this.trigger("header-loading");
-        $.get("/Steam/PlayerBySteamId/" + steamId, loadDone);
+        $.get("/Steam/PlayerBySteamId/" + steamId, this.loadDone);
     },
 
     loadDone: function (player, textStatus, jqXHR) {
