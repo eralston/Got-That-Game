@@ -222,6 +222,27 @@ a.comparison-friend-without {
 }
 
 /* Steam button */
+
+@-moz-keyframes logo-glow {
+    from {
+        box-shadow: 0 0 50px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
+    }
+
+    to {
+        box-shadow: 0 0 20px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
+    }
+}
+
+@-moz-keyframes logo-glow-big {
+    from {
+        box-shadow: 0 0 80px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
+    }
+
+    to {
+        box-shadow: 0 0 30px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
+    }
+}
+
 @-webkit-keyframes logo-glow {
     from {
         box-shadow: 0 0 50px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
@@ -242,15 +263,12 @@ a.comparison-friend-without {
     }
 }
 
-.steam-login-button {
-    -webkit-animation: logo-glow 0.25s ease-in-out infinite alternate;
-    background-image: url("/Content/Images/sits_large_border.png");
+.steam-login-button img {
     border-radius: 7px;
+    margin:2em 0;
     box-shadow: 0 0 100px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
-    cursor: pointer;
-    height: 51px;
-    margin: 50px auto;
-    width: 118px;
+    -moz-animation: logo-glow 2s ease-in-out infinite alternate;
+    -webkit-animation: logo-glow 2s ease-in-out infinite alternate;
 }
 
 #username {
@@ -263,5 +281,6 @@ a.comparison-friend-without {
 }
 
     #username[value=""] {
+        -moz-animation: logo-glow 0.25s ease-in-out infinite alternate;
         -webkit-animation: logo-glow 0.25s ease-in-out infinite alternate;
     }

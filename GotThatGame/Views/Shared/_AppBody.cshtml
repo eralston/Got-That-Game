@@ -1,0 +1,129 @@
+﻿@using Combres.Mvc
+@using GotThatGame
+
+@{
+    Layout = null;
+}
+
+<section id="currentPlayerInfo">
+</section>
+<section class="main-app-window" style="display: none">
+    <div class="col-half">
+        <h2>Friends</h2>
+        <div id="_friendList" class="friend-list">
+        </div>
+    </div>
+    <div class="col-half">
+        <h2>Games</h2>
+        <div id="_gameList" class="game-list">
+        </div>
+        <div id="_comparison">
+        </div>
+    </div>
+</section>
+
+@*HTML Templates used by Steam.js*@
+
+@*Current Player*@
+<script id="_currentPlayerProfileLoadingTemplate" type="text/html">
+    <div class="loading-player-wrapper">
+        <i class="icon-loading icon-spinner icon-spin"></i>
+        <span>Searching for Steam user {{Name}}...</span>
+    </div>
+</script>
+<script id="_currentPlayerProfileTemplate" type="text/html">
+    <h2>Your Profile</h2>
+    <div class="current-player-wrapper">
+        <span class="current-player-name"><a href="{{ProfileUrl}}" target="_blank">{{Name}}</a></span>
+        <img src="{{AvatarLarge}}" />
+        <i class="icon-refresh"></i>
+    </div>
+</script>
+
+@*Friends *@
+<script id="_friendsLoadingTemplate" type="text/html">
+    <div>
+        <i class="icon-loading icon-spinner icon-spin"></i>
+        Friends Loading...
+    </div>
+</script>
+<script id="_friendsLoadFailedTemplate" type="text/html">
+    <div>
+        Friend Load Failed<br />
+        <i class="icon-refresh refresh-friends"></i>
+        Try Again
+    </div>
+</script>
+<script id="_friendItemTemplate" type="text/html">
+    <div class="friend-list-item" data-id="{{SteamId}}">
+        <img src="{{AvatarSmall}}" alt="{{Name}}" class="thumbnail" />
+        <span class="friend-name"><a href="{{ProfileUrl}}" target="_blank">{{Name}}</a></span>
+        <div class="friend-error icon-warning-sign refresh"></div>
+        <div class="friend-refresh icon-refresh refresh"></div>
+        <div class="friend-loading icon-spin icon-spinner"></div>
+        <div class="friend-add icon-plus-sign"></div>
+        <div class="friend-added icon-ok-sign"></div>
+        <div class="friend-error-popup">
+            <div class="friend-error-text-wrapper">
+                <i class="icon-warning-sign"></i>
+                <span class="friend-error-text"></span>
+            </div>
+        </div>
+    </div>
+</script>
+
+@*Games*@
+<script id="_gamesLoadingTemplate" type="text/html">
+    <div>
+        <i class="icon-loading icon-spinner icon-spin"></i>
+        Games Loading...
+    </div>
+</script>
+<script id="_gamesLoadFailedTemplate" type="text/html">
+    <div>
+        Game Collection Load Failed<br />
+        <i class="icon-refresh refresh-games"></i>
+        Try Again
+    </div>
+</script>
+<script id="_gameItemTemplate" type="text/html">
+    <div class="game-list-item" data-count="{{Count}}" data-name="{{Name}}" data-app-id="{{AppId}}">
+        <a href="{{StoreUrl}}" target="_blank">
+            <img src="{{ImageUrl}}" alt="{{Name}}" class="thumbnail" /></a>
+        <span class="game-name"><a href="{{StoreUrl}}" target="_blank">{{Name}}</a></span>
+        <span class="game-count">{{Count}}/{{Total}}</span>
+    </div>
+</script>
+
+@*Comparison*@
+<script id="_comparisonFailedTemplate" type="text/html">
+    <div>
+        Comparison Load Failed<br />
+        <i class="icon-refresh refresh"></i>
+        Try Again
+    </div>
+</script>
+<script id="_comparisonLoadingTemplate" type="text/html">
+    <div class="comparison-loading-header">
+        <i class="icon-loading icon-spinner icon-spin"></i>
+        Loading Game Collections &amp; Comparing...
+    </div>
+</script>
+<script id="_comparisonFriendWithoutTemplate" type="text/html">
+    <a href="{{ProfileUrl}}" class="comparison-friend-without" target="_blank">{{Name}}</a>
+</script>
+<script id="_comparisonFriendWithTemplate" type="text/html">
+    <a href="{{ProfileUrl}}" class="comparison-friend-with" target="_blank">{{Name}}</a>
+</script>
+<script id="_comparisonDetailTemplate" type="text/html">
+    <div class="comparison-detail-popup">
+        <div class="comparison-detail-popup-inner">
+            {{Html}}
+        </div>
+    </div>
+</script>
+
+@*Script files for this page*@
+@section bodyBottom {
+    
+}

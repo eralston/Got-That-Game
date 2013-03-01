@@ -1,174 +1,48 @@
-@using Combres.Mvc
-@using GotThatGame
-
 @{
     ViewBag.Title = "";
 }
 
 @section head {
-    @if (@Html.IsDebug())
-    {
-        <link href="~/Content/Fonts/fontawesome.css" type="text/css" rel="stylesheet" />
-        <link href="~/Content/steam.css" type="text/css" rel="stylesheet" />
-    }
-    else
-    {
-        @Url.CombresLink("appCss")
-    }
+    @Html.Partial("_AppHead")
 }
 
 @*HTML content for this page*@
 <section>
     <div class='col-half'>
         <h2>What Should We Play?</h2>
-        <p>Ever find yourself struggling to choose what to play with your friends? Got That Game will help instantly find the game you have in common.</p>
+        <p>Ever find yourself struggling to choose what to play with your friends? Got That Game will help instantly find the games you have in common.</p>
     </div>
     <div class='col-half'>
         <h2>How Does It Work?</h2>
-        <p>Enter your <a href="http://steampowered.com">Steam</a> username and you will be able to view your game collection and easily compare it with friends</p>
+        <p>Browse by <a href="http://steampowered.com">Steam</a> username or login with your Steam ID and you will be able to view your game collection and easily compare it with friends.</p>
     </div>
 </section>
 <section>
     <div class="col-half">
-        <h2>Get Started</h2>
+        <h2>Browse By Username</h2>
         <input type="text" id="username" placeholder="Steam Username" />
     </div>
-</section>
-<section id="currentPlayerInfo">
-</section>
-<section class="main-app-window" style="display: none">
     <div class="col-half">
-        <h2>Friends</h2>
-        <div id="_friendList" class="friend-list">
-        </div>
-    </div>
-    <div class="col-half">
-        <h2>Games</h2>
-        <div id="_gameList" class="game-list">
-        </div>
-        <div id="_comparison">
-        </div>
+        <h2>Login With Steam</h2>
+        <a href="/Home/Authenticate" class="steam-login-button ">
+            <img src="~/Content/Images/sits_large_border.png" class="" width="118" height="51" alt="Login With Steam" />
+        </a>
     </div>
 </section>
+@Html.Partial("_AppBody")
 
-@*HTML Templates used by Steam.js*@
-
-@*Current Player*@
-<script id="_currentPlayerProfileLoadingTemplate" type="text/html">
-    <div class="loading-player-wrapper">
-        <i class="icon-loading icon-spinner icon-spin"></i>
-        <span>Searching for Steam user {{Name}}...</span>
-    </div>
-</script>
-<script id="_currentPlayerProfileTemplate" type="text/html">
-    <h2>Your Profile</h2>
-    <div class="current-player-wrapper">
-        <span class="current-player-name"><a href="{{ProfileUrl}}" target="_blank">{{Name}}</a></span>
-        <img src="{{AvatarLarge}}" />
-        <i class="icon-refresh"></i>
-    </div>
-</script>
-
-@*Friends *@
-<script id="_friendsLoadingTemplate" type="text/html">
-    <div>
-        <i class="icon-loading icon-spinner icon-spin"></i>
-        Friends Loading...
-    </div>
-</script>
-<script id="_friendsLoadFailedTemplate" type="text/html">
-    <div>
-        Friend Load Failed<br />
-        <i class="icon-refresh refresh-friends"></i>
-        Try Again
-    </div>
-</script>
-<script id="_friendItemTemplate" type="text/html">
-    <div class="friend-list-item" data-id="{{SteamId}}">
-        <img src="{{AvatarSmall}}" alt="{{Name}}" class="thumbnail" />
-        <span class="friend-name"><a href="{{ProfileUrl}}" target="_blank">{{Name}}</a></span>
-        <div class="friend-error icon-warning-sign refresh"></div>
-        <div class="friend-refresh icon-refresh refresh"></div>
-        <div class="friend-loading icon-spin icon-spinner"></div>
-        <div class="friend-add icon-plus-sign"></div>
-        <div class="friend-added icon-ok-sign"></div>
-        <div class="friend-error-popup">
-            <div class="friend-error-text-wrapper">
-                <i class="icon-warning-sign"></i>
-                <span class="friend-error-text"></span>
-            </div>
-        </div>
-    </div>
-</script>
-
-@*Games*@
-<script id="_gamesLoadingTemplate" type="text/html">
-    <div>
-        <i class="icon-loading icon-spinner icon-spin"></i>
-        Games Loading...
-    </div>
-</script>
-<script id="_gamesLoadFailedTemplate" type="text/html">
-    <div>
-        Game Collection Load Failed<br />
-        <i class="icon-refresh refresh-games"></i>
-        Try Again
-    </div>
-</script>
-<script id="_gameItemTemplate" type="text/html">
-    <div class="game-list-item" data-count="{{Count}}" data-name="{{Name}}" data-app-id="{{AppId}}">
-        <a href="{{StoreUrl}}" target="_blank">
-            <img src="{{ImageUrl}}" alt="{{Name}}" class="thumbnail" /></a>
-        <span class="game-name"><a href="{{StoreUrl}}" target="_blank">{{Name}}</a></span>
-        <span class="game-count">{{Count}}/{{Total}}</span>
-    </div>
-</script>
-
-@*Comparison*@
-<script id="_comparisonFailedTemplate" type="text/html">
-    <div>
-        Comparison Load Failed<br />
-        <i class="icon-refresh refresh"></i>
-        Try Again
-    </div>
-</script>
-<script id="_comparisonLoadingTemplate" type="text/html">
-    <div class="comparison-loading-header">
-        <i class="icon-loading icon-spinner icon-spin"></i>
-        Loading Game Collections &amp; Comparing...
-    </div>
-</script>
-<script id="_comparisonFriendWithoutTemplate" type="text/html">
-    <a href="{{ProfileUrl}}" class="comparison-friend-without" target="_blank">{{Name}}</a>
-</script>
-<script id="_comparisonFriendWithTemplate" type="text/html">
-    <a href="{{ProfileUrl}}" class="comparison-friend-with" target="_blank">{{Name}}</a>
-</script>
-<script id="_comparisonDetailTemplate" type="text/html">
-    <div class="comparison-detail-popup">
-        <div class="comparison-detail-popup-inner">
-            {{Html}}
-        </div>
-    </div>
-</script>
-
-@*Script files for this page*@
 @section bodyBottom {
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js" type="text/javascript"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.3/underscore-min.js" type="text/javascript"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min.js" type="text/javascript"></script>
-    <script>
-        _.templateSettings = {
-            interpolate: /\{\{(.+?)\}\}/g
-        };
+    @Html.Partial("_AppBodyBottom")
+
+    <script type="text/javascript">
+        // Kick it off on document ready
+        $(function () {
+            // events
+            var debouncedLoadCurrentPlayer = _.debounce(loadCurrentPlayerByFriendlyName, 500);
+            $("#username").keyup(debouncedLoadCurrentPlayer);
+
+            // kick off in the event of carried over value (like in firefox reload)
+            loadCurrentPlayerByFriendlyName();
+        });
     </script>
-    @if (@Html.IsDebug())
-    {
-        <script src="~/Scripts/jquery.tinysort.min.js"></script>
-        <script src="~/Scripts/Steam.js"></script>
-    }
-    else
-    {
-        @Url.CombresLink("appJs")
-    }
 }

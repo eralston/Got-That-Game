@@ -66,5 +66,20 @@ namespace GotThatGame.Test
             // Assert.AreEqual("expected value", viewModel.SomeProperty);
             Assert.IsNotNull(viewResult);
         }
+
+        [TestMethod]
+        public void CompareTest()
+        {
+        	// Arrange
+        	var controller = new HomeController();
+        
+        	// Act
+        	var viewResult = controller.Compare();
+        	var viewModel = viewResult.Model;
+        
+        	// Assert
+        	// Assert.AreEqual("expected value", viewModel.SomeProperty);
+        	Assert.Inconclusive(); // Todo: Make assertions, then remove this line
+        }
     }
 }

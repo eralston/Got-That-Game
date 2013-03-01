@@ -1,0 +1,20 @@
+@{
+    ViewBag.Title = "Compare";
+}
+
+@section head {
+    @Html.Partial("_AppHead")
+}
+
+<input type="hidden" id="username" value="@ViewBag.SteamId" />
+
+@Html.Partial("_AppBody")
+
+@section bodyBottom {
+    @Html.Partial("_AppBodyBottom")
+
+    <script type="text/javascript">
+        // Kick it off on document ready
+        $(loadCurrentPlayerBySteamId);
+    </script>
+}

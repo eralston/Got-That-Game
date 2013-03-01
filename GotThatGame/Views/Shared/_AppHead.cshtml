@@ -1,0 +1,16 @@
+﻿@using Combres.Mvc
+@using GotThatGame
+
+@{
+    Layout = null;
+}
+
+@if (@Html.IsDebug())
+{
+    <link href="~/Content/Fonts/fontawesome.css" type="text/css" rel="stylesheet" />
+    <link href="~/Content/steam.css" type="text/css" rel="stylesheet" />
+}
+else
+{
+    @Url.CombresLink("appCss")
+}

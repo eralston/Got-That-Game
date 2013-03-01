@@ -826,16 +826,12 @@ $(".game-comparison .game-list-item").live("hover", function () {
     window.currentPlayerView.comparisonModel
 });
 
-
-///
-/// Clears the UI of its current state, then asynchronously loads up a new user given the state of the username input
-///
-function loadCurrentPlayer() {
+function setupAndGetUsername() {
     var username = $("#username").val();
     username = username.trim();
 
     if (username == "")
-        return;
+        return undefined;
 
     window.currentPlayerModel = new Player();
 
@@ -843,21 +839,24 @@ function loadCurrentPlayer() {
 
     window.currentPlayerView = new CurrentPlayerView({ model: window.currentPlayerModel });
     $("#currentPlayerInfo").append(window.currentPlayerView.$el);
+
+    return username;
+}
+
+function loadCurrentPlayerBySteamId() {
+    var username = setupAndGetUsername();
+    if (username == undefined)
+        return;
+    window.currentPlayerModel.loadBySteamId(username);
+}
+
+///
+/// Clears the UI of its current state, then asynchronously loads up a new user given the state of the username input
+///
+function loadCurrentPlayerByFriendlyName() {
+    
+    var username = setupAndGetUsername();
+    if (username == undefined)
+        return;
     window.currentPlayerModel.loadByFriendlyName(username);
 }
-
-///
-/// Called when the application first loads, performing first-time setup
-///
-function load() {
-
-    // events
-    var debouncedLoadCurrentPlayer = _.debounce(loadCurrentPlayer, 500);
-    $("#username").keyup(debouncedLoadCurrentPlayer);
-
-    // kick off in the event of carried over value (like in firefox reload)
-    loadCurrentPlayer();
-}
-
-// fire the load function on document ready
-$(load);
