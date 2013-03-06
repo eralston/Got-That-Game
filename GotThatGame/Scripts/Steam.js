@@ -1,11 +1,4 @@
 ﻿
-// console polyfill
-if (console == undefined)
-    console = {};
-
-if (console.log == undefined)
-    console.log = function (a) { };
-
 // utility functions
 function removeViewIfExists(view) {
     if (view != undefined && view != null)
@@ -395,7 +388,6 @@ var ComparisonModel = Backbone.Model.extend({
 
         var selectedFriends = this.getComparisonFriends();
 
-        console.log("Comparing " + selectedFriends.length + " friends");
         for (i in selectedFriends)
             selectedFriends[i].loadGames();
     },
