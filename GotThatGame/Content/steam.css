@@ -110,7 +110,7 @@
     padding: 1em;
 }
 
-.game-list-item:hover {
+.game-comparison .game-list-item:hover {
     background-color: #121214;
     background-image: url("/Content/Images/txture.png");
     max-height: 999em;

@@ -95,6 +95,9 @@ namespace GotThatGame.Controllers
         [OutputCache(CacheProfile = "Static")]
         public ViewResult Support()
         {
+
+            var developers = new List<string>();
+            var me = developers.Where(d => d.IsNormalized() && d.IsNormalized());
             return View();
         }
 
