@@ -184,7 +184,6 @@
     <Content Include="Content\site.css" />
     <Content Include="Content\steam.css" />
     <Content Include="Global.asax" />
-    <Content Include="google16a5de242041690e.html" />
     <Content Include="Scripts\jquery.tinysort.js" />
     <Content Include="Scripts\jquery.tinysort.min.js" />
     <Content Include="Scripts\Steam.js" />
