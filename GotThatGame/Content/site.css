@@ -128,7 +128,7 @@ body {
     position: absolute;
     left: 0;
     right: 0;
-    background-color: #232326;
+    background-color: transparent;
     background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#262626), to(#121214));
     background: -moz-linear-gradient(top, #262626 0%, #121214 100%);
     height: 150px;
