@@ -47,12 +47,13 @@
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="navbar-inner">
-            <div class="container">
-                <a href="/" class="brand">Got That Game?</a>
-                <a href="/Home/Authenticate" class="quick-login">
-                    <img src="~/Content/Images/sits_small.png" />
-
-                </a>
+            <div class="row">
+                <div class="span12">
+                    <a href="/" class="brand">Got That Game?</a>
+                    <a href="/Home/Authenticate" class="quick-login">
+                        <img src="~/Content/Images/sits_small.png" />
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -98,6 +99,7 @@
             </div>
         </div>
     </footer>
+    <!-- @Html.Raw(DateTime.Now.ToString()) -->
     @RenderSection("bodyBottom", false)
 </body>
 </html>
