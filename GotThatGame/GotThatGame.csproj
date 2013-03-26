@@ -178,10 +178,12 @@
     <Content Include="Content\Fonts\fontawesome-ie7.css" />
     <Content Include="Content\Fonts\fontawesome.css" />
     <Content Include="Content\Fonts\icon-reference.html" />
+    <Content Include="Content\Images\gtg_original.svg" />
     <Content Include="Content\Images\sits_large_border.png" />
     <Content Include="Content\Images\sits_large_noborder.png" />
     <Content Include="Content\Images\sits_small.png" />
     <Content Include="Content\Images\txture.png" />
+    <Content Include="Content\Images\gtglogo.svg" />
     <Content Include="Content\site.css" />
     <Content Include="Content\steam.css" />
     <Content Include="Global.asax" />
