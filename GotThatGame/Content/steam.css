@@ -154,7 +154,7 @@ a.comparison-friend-without {
 
     .current-player-wrapper .ambiguity-help {
         left: 4.5em;
-        position:absolute;
+        position: absolute;
         bottom: 0;
     }
 
@@ -271,6 +271,9 @@ a.comparison-friend-without {
 .steam-login-button img {
     border-radius: 7px;
     margin: 0.5em 0;
+}
+
+.logo-glow {
     box-shadow: 0 0 100px #5c7f27, inset 0 0 10px rgba(92, 127, 39, 0.6);
     -moz-animation: logo-glow 2s ease-in-out infinite alternate;
     -webkit-animation: logo-glow 2s ease-in-out infinite alternate;

@@ -58,6 +58,7 @@ h1 {
     font-size: 2.85em;
     margin: 0;
     padding: 0.25em 0 0 0;
+    text-shadow: -1px 0 rgba(0, 0, 0, 0.25)
 }
 
 h2 {
@@ -190,6 +191,8 @@ footer {
     background-color: #121214;
     margin-bottom:0;
     padding-bottom: 20px;
+    border-radius: 0;
+    box-shadow: 0 0 4px black inset;
 }
 
     .hero-unit h1 {
@@ -205,6 +208,10 @@ footer {
         margin-top:0.25em;
     }
 
+    .hero-unit p {
+        margin-top: 0;
+    }
+
 .quick-login img {
     margin-top:0.5em;
     float:right;
@@ -212,4 +219,8 @@ footer {
 
 .top-spacer {
     height: 2.5em;
+}
+
+.navbar {
+    border-bottom: 1px solid #8b8c8c;
 }
