@@ -7,28 +7,31 @@
 }
 
 @*HTML content for this page*@
-<section>
-    <div class='col-half'>
-        <h2>What Should We Play?</h2>
-        <p>Ever find yourself struggling to choose what to play with your friends? Got That Game will help instantly find the games you have in common.</p>
+<div class="hero-unit">
+    <div class="row">
+        <div class="span6">
+            <h1>What Can We Play?</h1>
+            <p>
+                Instantly find the games you have in common with your friends.
+            </p>
+            <h1>How Does It Work?</h1>
+            <p>
+                Enter your <a href="http://steampowered.com">Steam</a> username or login with your Steam ID to view your game collecton and easily compare it with friends
+            </p>
+        </div>
+        <div class="span4 center">
+            <h4>Enter Your Username</h4>
+            <input type="text" id="username" placeholder="Steam Username" />
+            <h3>&mdash; Or &mdash; </h3>
+            <h4>Login with Your Steam ID</h4>
+            <a href="/Home/Authenticate" class="steam-login-button ">
+                <img src="~/Content/Images/sits_large_border.png" class="" width="118" height="51" alt="Login With Steam" />
+            </a>
+        </div>
+        <div class="span2"></div>
     </div>
-    <div class='col-half'>
-        <h2>How Does It Work?</h2>
-        <p>Browse by <a href="http://steampowered.com">Steam</a> username or login with your Steam ID and you will be able to view your game collection and easily compare it with friends.</p>
-    </div>
-</section>
-<section>
-    <div class="col-half">
-        <h2>Browse By Username</h2>
-        <input type="text" id="username" placeholder="Steam Username" />
-    </div>
-    <div class="col-half">
-        <h2>Login With Steam</h2>
-        <a href="/Home/Authenticate" class="steam-login-button ">
-            <img src="~/Content/Images/sits_large_border.png" class="" width="118" height="51" alt="Login With Steam" />
-        </a>
-    </div>
-</section>
+</div>
+<div class='header-blanket'></div>
 @Html.Partial("_AppBody")
 
 @section bodyBottom {

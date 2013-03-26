@@ -5,22 +5,24 @@
     Layout = null;
 }
 
-<section id="currentPlayerInfo">
-</section>
-<section class="main-app-window" style="display: none">
-    <div class="col-half">
+<div class="row">
+    <div id="currentPlayerInfo" class="span12">
+    </div>
+</div>
+<div class="main-app-window row" style="display: none">
+    <div class="span6">
         <h2>Friends</h2>
         <div id="_friendList" class="friend-list">
         </div>
     </div>
-    <div class="col-half">
+    <div class="span6">
         <h2>Games</h2>
         <div id="_gameList" class="game-list">
         </div>
         <div id="_comparison">
         </div>
     </div>
-</section>
+</div>
 
 @*HTML Templates used by Steam.js*@
 
@@ -36,7 +38,7 @@
     <div class="current-player-wrapper">
         <span class="current-player-name"><a href="{{ProfileUrl}}" target="_blank">{{Name}}</a></span>
         <img src="{{AvatarLarge}}" />
-        <i class="icon-refresh"></i>
+        <span class="ambiguity-help">Not Your Profile? Try <a href="/Home/Authenticate">Logging In With Steam</a></span>
     </div>
 </script>
 
@@ -56,7 +58,7 @@
 </script>
 <script id="_friendItemTemplate" type="text/html">
     <div class="friend-list-item" data-id="{{SteamId}}">
-        <img src="{{AvatarSmall}}" alt="{{Name}}" class="thumbnail" />
+        <img src="{{AvatarSmall}}" alt="{{Name}}" class="thumbnail-image" />
         <span class="friend-name"><a href="{{ProfileUrl}}" target="_blank">{{Name}}</a></span>
         <div class="friend-error icon-warning-sign refresh"></div>
         <div class="friend-refresh icon-refresh refresh"></div>
@@ -89,7 +91,7 @@
 <script id="_gameItemTemplate" type="text/html">
     <div class="game-list-item" data-count="{{Count}}" data-name="{{Name}}" data-app-id="{{AppId}}">
         <a href="{{StoreUrl}}" target="_blank">
-            <img src="{{ImageUrl}}" alt="{{Name}}" class="thumbnail" /></a>
+            <img src="{{ImageUrl}}" alt="{{Name}}" class="thumbnail-image" /></a>
         <span class="game-name"><a href="{{StoreUrl}}" target="_blank">{{Name}}</a></span>
         <span class="game-count">{{Count}}/{{Total}}</span>
     </div>
@@ -125,5 +127,5 @@
 
 @*Script files for this page*@
 @section bodyBottom {
-    
+
 }

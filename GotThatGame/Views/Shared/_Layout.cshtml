@@ -14,13 +14,14 @@
     <meta name="Author" content="Erik Ralston">
     <meta name="copyright" content="Copyright 2013">
     <meta name="robots" content="index, follow">
-    <meta name="title" content="@ViewBag.Title">
+    <meta name="title" content="@ViewBag.Title Got That Game? Compare Your Steam Games With Friends">
     <title>
         @ViewBag.Title
         Got That Game? Compare Your Steam Games With Friends
     </title>
 
     @*CSS*@
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href='http://fonts.googleapis.com/css?family=Abel|Aldrich' rel='stylesheet' type='text/css' />
     @if (@Html.IsDebug())
     {
@@ -44,52 +45,57 @@
     </script>
 </head>
 <body>
-    <div class='header-wrapper'>
-        <header>
-            <div class='wrapper'>
-                <h1><a class='logo huge' href='/'>Got&nbsp;That&nbsp;Game?</a></h1>
-                <h2 class="subtitle">Compare Your Steam Games With Friends</h2>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a href="/" class="brand">Got That Game?</a>
+                <a href="/Home/Authenticate" class="quick-login">
+                    <img src="~/Content/Images/sits_small.png" />
+
+                </a>
             </div>
-        </header>
+        </div>
     </div>
     <div class='header-blanket'></div>
     @RenderBody()
     <div class="clear"></div>
     <footer>
-        <div class='col-third'>
-            <h3>Sitemap</h3>
-            <ul class='sitemap-list'>
-                <li>
-                    @Html.ActionLink("Home", "Index", "Home")
-                </li>
-                <li>
-                    @Html.ActionLink("About", "About", "Home")
-                </li>
-                <li>
-                    @Html.ActionLink("Support", "Support", "Home")
-                </li>
-                <li>
-                    @Html.ActionLink("Legal", "Legal", "Home")
-                </li>
-                <li>
-                    <a href='http://steampowered.com'>Powered By Steam</a>
-                </li>
-            </ul>
-        </div>
-        <div class="col-third">
-            <h3>Privacy</h3>
-            <p>
-                Got That Game does not store personal information or share it with third-parties
-            </p>
-        </div>
-        <div class='col-third'>
-            <h3>Made In the USA</h3>
-            <p>
-                Created by <a href="http://erik-ralston.com" target="_blank">Erik Ralston</a> who works at <a href="http://addisolv.com" target="_blank">Addisolv</a>
-            </p>
-            <p>
-                This site is not affiliated with Valve or Steam. It remains a one-way financial relationship.
-            </p>
+        <div class="row">
+            <div class='span4'>
+                <h3>Sitemap</h3>
+                <ul class='sitemap-list'>
+                    <li>
+                        @Html.ActionLink("Home", "Index", "Home")
+                    </li>
+                    <li>
+                        @Html.ActionLink("About", "About", "Home")
+                    </li>
+                    <li>
+                        @Html.ActionLink("Support", "Support", "Home")
+                    </li>
+                    <li>
+                        @Html.ActionLink("Legal", "Legal", "Home")
+                    </li>
+                    <li>
+                        <a href='http://steampowered.com'>Powered By Steam</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="span4">
+                <h3>Privacy</h3>
+                <p>
+                    Got That Game does not store personal information or share it with third-parties
+                </p>
+            </div>
+            <div class='span4'>
+                <h3>Made In the USA</h3>
+                <p>
+                    Created by <a href="http://erik-ralston.com" target="_blank">Erik Ralston</a> who works at <a href="http://addisolv.com" target="_blank">Addisolv</a>
+                </p>
+                <p>
+                    This site is not affiliated with Valve or Steam. It remains a one-way financial relationship.
+                </p>
+            </div>
         </div>
     </footer>
     @RenderSection("bodyBottom", false)

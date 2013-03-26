@@ -85,7 +85,6 @@ h4 {
 p {
     margin-top: 1em;
     line-height: 1.5em;
-    padding-right: 2em;
 }
 
 h1, h2, h3, h4, h5, .logo {
@@ -93,15 +92,6 @@ h1, h2, h3, h4, h5, .logo {
 }
 
 /* Grid */
-.col-half {
-    width: 50%;
-    float: left;
-}
-
-.col-third {
-    width: 33%;
-    float: left;
-}
 
 header, footer, section {
     width: 960px;
@@ -169,10 +159,10 @@ footer {
         margin-bottom: 0.5em;
     }
 
-.logo {
+.brand {
+    font-family: "Aldrich", "arial", sans-serif;
     color: #f3f3f8 !important;
     text-decoration: none;
-    text-shadow: 1px 1px 0 #f3f3f8, 2px 2px 0 #f3f3f8, 3px 3px 0 #8b8c8c, 4px 4px 0 #8b8c8c, 5px 5px 0 #8b8c8c, 6px 6px 0 #8b8c8c;
 }
 
 .unseen {
@@ -182,4 +172,44 @@ footer {
 
 .clear {
     clear: both;
+}
+
+/* Bootstrap changes */
+.row {
+    width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.center {
+    text-align:center;
+}
+
+.hero-unit {
+    background-image: url("/Content/Images/txture.png");
+    background-color: #121214;
+    margin-bottom:0;
+    padding-bottom: 20px;
+}
+
+    .hero-unit h1 {
+        font-size: 2em;
+    }
+
+    .hero-unit h3 {
+        margin-top: 0.25em;
+    }
+
+    .hero-unit h4 {
+        font-family: "Abel", "arial", sans-serif;
+        margin-top:0.25em;
+    }
+
+.quick-login img {
+    margin-top:0.5em;
+    float:right;
+}
+
+.top-spacer {
+    height: 2.5em;
 }

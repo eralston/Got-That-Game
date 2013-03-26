@@ -95,16 +95,23 @@ namespace GotThatGame.Controllers
         [OutputCache(CacheProfile = "Static")]
         public ViewResult Support()
         {
-
             var developers = new List<string>();
             var me = developers.Where(d => d.IsNormalized() && d.IsNormalized());
             return View();
         }
 
-        public ViewResult Compare()
+        /// <summary>
+        /// Action for performing an authenticated comparison
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Compare()
         {
             ViewBag.SteamId = CurrentUserSteamId;
-            return View();
+
+            if (string.IsNullOrEmpty(ViewBag.SteamId))
+                return RedirectToAction("Index");
+            else
+                return View();
         }
 
         #endregion

@@ -75,11 +75,10 @@ namespace GotThatGame.Test
         
         	// Act
         	var viewResult = controller.Compare();
-        	var viewModel = viewResult.Model;
         
         	// Assert
         	// Assert.AreEqual("expected value", viewModel.SomeProperty);
-        	Assert.Inconclusive(); // Todo: Make assertions, then remove this line
+            Assert.IsNotNull(viewResult);
         }
     }
 }

@@ -1,13 +1,23 @@
 @{
-    ViewBag.Title = "Compare";
+    ViewBag.Title = "";
 }
 
 @section head {
+    <style>
+        .quick-login {
+            display: none;
+        }
+
+        .ambiguity-help {
+            display: none;
+        }
+    </style>
     @Html.Partial("_AppHead")
+
 }
 
 <input type="hidden" id="username" value="@ViewBag.SteamId" />
-
+<div class="top-spacer"></div>
 @Html.Partial("_AppBody")
 
 @section bodyBottom {
